@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jednoręki bandyta - Z wizualizacją</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <h1>Jednoręki bandyta</h1>
+
+  <div class="slot-machine">
+    <div class="reel-container"><div id="reel1" class="reel"></div></div>
+    <div class="reel-container"><div id="reel2" class="reel"></div></div>
+    <div class="reel-container"><div id="reel3" class="reel"></div></div>
+    <div class="reel-container"><div id="reel4" class="reel"></div></div>
+    <div class="reel-container"><div id="reel5" class="reel"></div></div>
+    <div class="reel-container"><div id="reel6" class="reel"></div></div>
+    <div class="reel-container"><div id="reel7" class="reel"></div></div>
+    <div class="reel-container"><div id="reel8" class="reel"></div></div>
+    <div class="reel-container"><div id="reel9" class="reel"></div></div>
+  </div>
+
+  <label for="bet">Wybierz stawkę: </label>
+  <select id="bet">
+    <option value="1">1 PLN</option>
+    <option value="2">2 PLN</option>
+    <option value="5">5 PLN</option>
+    <option value="10">10 PLN</option>
+  </select>
+
+  <button id="spin-button">Spin</button>
+  <button id="add-money-button">Dodaj 5 PLN</button>
+
+  <div id="money-counter">Środki: 10 PLN</div>
+  <div id="result-message"></div>
+
+  <script src="script.js"></script>
+
+</body>
+</html>
