@@ -1,0 +1,20 @@
+# Ignorowanie katalogów systemowych
+AppData/
+Contacts/
+Desktop/
+Documents/
+Downloads/
+Favorites/
+OneDrive/
+Pictures/
+Videos/
+
+# Ignorowanie plików i katalogów IDE
+.vscode/
+.idea/
+.DS_Store
+node_modules/
+
+# Ignorowanie plików tymczasowych
+*.log
+*.tmp
