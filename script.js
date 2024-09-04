@@ -18,9 +18,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const betSelect = document.getElementById('bet');
 
     const symbols = ['🍒', '🍋', '🍉', '🍇', '🍓', '🍊'];
+    let balance = 10;
 
-    // Funkcja losująca i obracająca bębny za pomocą GSAP
-    spinButton.addEventListener('click', () => {
+    // Funkcja do resetowania bębnów przed spinem
+    const resetReels = () => {
+        reels.forEach(reel => {
+            reel.innerHTML = ''; // Czyszczenie zawartości
+            for (let i = 0; i < 20; i++) { // Tworzenie symboli na bębnach
+                const symbol = document.createElement('div');
+                symbol.innerText = symbols[Math.floor(Math.random() * symbols.length)];
+                reel.appendChild(symbol);
+            }
+        });
+    };
+
+    // Funkcja animująca bębny za pomocą GSAP
+    const spinReels = () => {
+        resetReels(); // Resetowanie bębnów
         reels.forEach((reel, index) => {
             const stopPosition = Math.random() * 300 + 500; // Losowe przesunięcie
             gsap.to(reel, {
@@ -28,11 +42,46 @@ document.addEventListener('DOMContentLoaded', () => {
                 duration: 2 + index * 0.5, // Czas animacji
                 ease: "power1.inOut", // Typ animacji
                 onComplete: () => {
-                    // Tu możesz dodać kod do obsługi wyników po zatrzymaniu się bębnów
+                    if (index === reels.length - 1) {
+                        checkResult(); // Sprawdzanie wyniku po zakończeniu animacji wszystkich bębnów
+                    }
                 }
             });
         });
+    };
+
+    // Sprawdzenie wyniku gry
+    const checkResult = () => {
+        const selectedSymbols = reels.map(reel => reel.children[1].innerText);
+        const uniqueSymbols = [...new Set(selectedSymbols)];
+        
+        if (uniqueSymbols.length === 1) {
+            resultMessage.innerText = 'Wygrałeś!';
+            balance += parseInt(betSelect.value) * 10; // Wygrana mnożona przez stawkę
+        } else {
+            resultMessage.innerText = 'Spróbuj ponownie!';
+        }
+
+        moneyCounter.innerText = balance;
+    };
+
+    // Kliknięcie przycisku spin
+    spinButton.addEventListener('click', () => {
+        const bet = parseInt(betSelect.value);
+
+        if (balance >= bet) {
+            balance -= bet;
+            spinReels(); // Animacja spinu
+        } else {
+            resultMessage.innerText = 'Nie masz wystarczających środków!';
+        }
+
+        moneyCounter.innerText = balance;
     });
 
-    // Pozostała część kodu obsługująca inne funkcje...
+    // Dodanie pieniędzy
+    addMoneyButton.addEventListener('click', () => {
+        balance += 10;
+        moneyCounter.innerText = balance;
+    });
 });
