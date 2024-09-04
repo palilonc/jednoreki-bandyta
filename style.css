@@ -16,6 +16,7 @@ body {
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    position: relative;
 }
 
 .slot-machine {
@@ -45,10 +46,6 @@ body {
     line-height: 100px;
 }
 
-.controls {
-    margin: 20px 0;
-}
-
 button {
     background-color: #ff6600;
     color: white;
@@ -71,4 +68,20 @@ button:hover {
 #result-message {
     font-size: 1.2rem;
     color: #76ff03;
+}
+
+.slot-machine-container h1 {
+    font-size: 3rem;
+    color: #ff6600;
+    text-shadow: 2px 2px #000;
+}
+
+.reel-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
 }
