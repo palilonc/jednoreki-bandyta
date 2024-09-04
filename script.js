@@ -40,7 +40,10 @@ document.addEventListener('DOMContentLoaded', () => {
             gsap.to(reel, {
                 y: `-=${stopPosition}`, // Przesunięcie pionowe
                 duration: 2 + index * 0.5, // Czas animacji
-                ease: "power1.inOut", // Typ animacji
+                ease: "elastic.inOut(1, 0.5)", // Typ animacji (dynamiczne zatrzymanie)
+                onStart: () => {
+                    gsap.fromTo(reel, { scaleY: 1.2 }, { scaleY: 1, duration: 0.2 });
+                },
                 onComplete: () => {
                     if (index === reels.length - 1) {
                         checkResult(); // Sprawdzanie wyniku po zakończeniu animacji wszystkich bębnów
@@ -56,6 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const uniqueSymbols = [...new Set(selectedSymbols)];
         
         if (uniqueSymbols.length === 1) {
+            gsap.to(reels, { scale: 1.1, duration: 0.5, yoyo: true, repeat: 3 });
             resultMessage.innerText = 'Wygrałeś!';
             balance += parseInt(betSelect.value) * 10; // Wygrana mnożona przez stawkę
         } else {
