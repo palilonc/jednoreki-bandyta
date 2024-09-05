@@ -86,6 +86,4 @@ document.addEventListener('DOMContentLoaded', () => {
     // Dodanie pieniędzy
     addMoneyButton.addEventListener('click', () => {
         balance += 10;
-        moneyCounter.innerText = balance;
-    });
-});
+        moneyCounter.inner
