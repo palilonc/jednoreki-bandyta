@@ -17,105 +17,70 @@ document.addEventListener('DOMContentLoaded', () => {
     const moneyCounter = document.getElementById('money-counter');
     const betSelect = document.getElementById('bet');
 
-    const symbols = ['🍒', '🍋', '🍉', '🍇', '🍓', '🍊'];
+    const symbols = ['🍒', '🍉', '🍋', '🍇', '🍓', '🍊'];
+
     let balance = 10;
 
-    // Funkcja do resetowania bębnów przed spinem
-    const resetReels = () => {
-        reels.forEach(reel => {
-            reel.innerHTML = ''; // Czyszczenie zawartości
-            for (let i = 0; i < 20; i++) { // Tworzenie symboli na bębnach
-                const symbol = document.createElement('div');
-                symbol.innerText = symbols[Math.floor(Math.random() * symbols.length)];
-                reel.appendChild(symbol);
-            }
-        });
-    };
+    function updateMoneyCounter() {
+        moneyCounter.textContent = balance;
+    }
 
-    // Funkcja animująca bębny za pomocą GSAP
-    const spinReels = () => {
-        resetReels(); // Resetowanie bębnów
+    function spinReels() {
+        const results = [];
         reels.forEach((reel, index) => {
-            const stopPosition = Math.random() * 300 + 500; // Losowe przesunięcie
-            gsap.to(reel, {
-                y: `-=${stopPosition}`, // Przesunięcie pionowe
-                duration: 2 + index * 0.5, // Czas animacji
-                ease: "elastic.inOut(1, 0.5)", // Typ animacji (dynamiczne zatrzymanie)
-                onStart: () => {
-                    gsap.fromTo(reel, { scaleY: 1.2 }, { scaleY: 1, duration: 0.2 });
-                },
-                onComplete: () => {
-                    if (index === reels.length - 1) {
-                        checkResult(); // Sprawdzanie wyniku po zakończeniu animacji wszystkich bębnów
-                    }
-                }
-            });
+            const symbol = symbols[Math.floor(Math.random() * symbols.length)];
+            reel.textContent = symbol;
+            results.push(symbol);
         });
-    };
+        return results;
+    }
 
-    // Funkcja do sprawdzania wyniku gry
-    const checkResult = () => {
-        const grid = [
-            reels[0].children[1].innerText,
-            reels[1].children[1].innerText,
-            reels[2].children[1].innerText,
-            reels[3].children[1].innerText,
-            reels[4].children[1].innerText,
-            reels[5].children[1].innerText,
-            reels[6].children[1].innerText,
-            reels[7].children[1].innerText,
-            reels[8].children[1].innerText,
+    function checkWin(results) {
+        const winLines = [
+            [0, 1, 2],  // Top row
+            [3, 4, 5],  // Middle row
+            [6, 7, 8],  // Bottom row
+            [0, 4, 8],  // Diagonal \
+            [2, 4, 6]   // Diagonal /
         ];
 
-        // Możliwe linie wygrywające: poziome, pionowe i ukośne
-        const winningLines = [
-            [0, 1, 2],  // Pierwszy rząd
-            [3, 4, 5],  // Drugi rząd
-            [6, 7, 8],  // Trzeci rząd
-            [0, 3, 6],  // Pierwsza kolumna
-            [1, 4, 7],  // Druga kolumna
-            [2, 5, 8],  // Trzecia kolumna
-            [0, 4, 8],  // Ukośna (górny lewy do dolny prawy)
-            [2, 4, 6],  // Ukośna (górny prawy do dolny lewy)
-        ];
-
-        let win = false;
-
-        // Sprawdzanie, czy są trzy te same symbole w wygrywających liniach
-        winningLines.forEach(line => {
-            if (grid[line[0]] === grid[line[1]] && grid[line[1]] === grid[line[2]]) {
-                win = true;
-                gsap.to([reels[line[0]], reels[line[1]], reels[line[2]]], { scale: 1.2, duration: 0.5, yoyo: true, repeat: 2 });
+        for (let line of winLines) {
+            const [a, b, c] = line;
+            if (results[a] === results[b] && results[b] === results[c]) {
+                return results[a]; // Zwraca symbol, jeśli jest wygrana
             }
-        });
-
-        if (win) {
-            resultMessage.innerText = 'Wygrałeś!';
-            balance += parseInt(betSelect.value) * 10; // Wygrana mnożona przez stawkę
-        } else {
-            resultMessage.innerText = 'Spróbuj ponownie!';
         }
+        return null;
+    }
 
-        moneyCounter.innerText = balance;
-    };
-
-    // Kliknięcie przycisku spin
     spinButton.addEventListener('click', () => {
         const bet = parseInt(betSelect.value);
 
         if (balance >= bet) {
             balance -= bet;
-            spinReels(); // Animacja spinu
+            updateMoneyCounter();
+
+            const results = spinReels();
+            const winSymbol = checkWin(results);
+
+            if (winSymbol) {
+                const winAmount = bet * 5; // Można zmienić stawkę wygranej
+                balance += winAmount;
+                resultMessage.textContent = `Wygrałeś ${winAmount} PLN za ${winSymbol}!`;
+            } else {
+                resultMessage.textContent = "Brak wygranej, spróbuj ponownie!";
+            }
+
+            updateMoneyCounter();
         } else {
-            resultMessage.innerText = 'Nie masz wystarczających środków!';
+            resultMessage.textContent = "Brak wystarczających środków!";
         }
-
-        moneyCounter.innerText = balance;
     });
 
-    // Dodanie pieniędzy
     addMoneyButton.addEventListener('click', () => {
-        balance += 10;
-        moneyCounter.innerText = balance;
+        balance += 10; // Dodajemy 10 PLN
+        updateMoneyCounter();
     });
+
+    updateMoneyCounter();
 });
