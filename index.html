@@ -1,65 +1,24 @@
 <!DOCTYPE html>
-<html lang="pl">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Always Hot Deluxe - 3x3</title>
+    <title>Jednoręki Bandyta - Always Hot Deluxe</title>
     <link rel="stylesheet" href="style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
 </head>
 <body>
-    <h1>Always Hot Deluxe - 3x3</h1>
 
-    <div class="slot-machine">
-        <div class="row">
-            <div class="reel" id="reel1"></div>
-            <div class="reel" id="reel2"></div>
-            <div class="reel" id="reel3"></div>
+    <div class="game-container">
+        <h1>Always Hot Deluxe</h1>
+
+        <div class="reels-container">
+            <div class="reel"></div>
+            <div class="reel"></div>
+            <div class="reel"></div>
         </div>
-        <div class="row">
-            <div class="reel" id="reel4"></div>
-            <div class="reel" id="reel5"></div>
-            <div class="reel" id="reel6"></div>
-        </div>
-        <div class="row">
-            <div class="reel" id="reel7"></div>
-            <div class="reel" id="reel8"></div>
-            <div class="reel" id="reel9"></div>
-        </div>
-    </div>
 
-    <div>
-        <label for="lines">Linie wygrywające:</label>
-        <select id="lines">
-            <option value="1">1 linia</option>
-            <option value="3">3 linie</option>
-            <option value="5">5 linii</option>
-        </select>
-    </div>
+        <button id="spinButton">Zakręć</button>
 
-    <div>
-        <label for="bet">Zakład na linię:</label>
-        <select id="bet">
-            <option value="1">1 kredyt</option>
-            <option value="5">5 kredytów</option>
-            <option value="10">10 kredytów</option>
-        </select>
+        <div id="result"></div>
     </div>
-
-    <div>
-        <label for="credit-price">Wartość jednego żetonu:</label>
-        <select id="credit-price">
-            <option value="0.01">0.01 PLN</option>
-            <option value="0.1">0.1 PLN</option>
-            <option value="1">1 PLN</option>
-        </select>
-    </div>
-
-    <button id="add-money-button">Dodaj kredyty</button>
-    <button id="spin-button">Spin</button>
-    <p>Saldo: <span id="money-counter">100</span> PLN</p>
-    <p>Zakład całkowity: <span id="total-bet">1</span> PLN</p>
-    <p id="result-message"></p>
 
     <script src="script.js"></script>
 </body>
