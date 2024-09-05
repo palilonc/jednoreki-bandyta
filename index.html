@@ -8,39 +8,35 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
 </head>
 <body>
-    <div class="slot-machine-container">
-        <h1>Jednoręki bandyta</h1>
-        <div class="slot-machine">
-            <!-- Pierwszy rząd -->
-            <div class="reel-container"><div id="reel1" class="reel"></div></div>
-            <div class="reel-container"><div id="reel2" class="reel"></div></div>
-            <div class="reel-container"><div id="reel3" class="reel"></div></div>
-            <!-- Drugi rząd -->
-            <div class="reel-container"><div id="reel4" class="reel"></div></div>
-            <div class="reel-container"><div id="reel5" class="reel"></div></div>
-            <div class="reel-container"><div id="reel6" class="reel"></div></div>
-            <!-- Trzeci rząd -->
-            <div class="reel-container"><div id="reel7" class="reel"></div></div>
-            <div class="reel-container"><div id="reel8" class="reel"></div></div>
-            <div class="reel-container"><div id="reel9" class="reel"></div></div>
-        </div>
+    <h1>Jednoręki bandyta</h1>
 
-        <div class="controls">
-            <button id="add-money-button">Dodaj pieniądze</button>
-            <button id="spin-button">Spin</button>
-            <select id="bet">
-                <option value="1">1 PLN</option>
-                <option value="2">2 PLN</option>
-                <option value="5">5 PLN</option>
-            </select>
+    <div class="slot-machine">
+        <div class="reel-container">
+            <div class="reel" id="reel1"></div>
+            <div class="reel" id="reel2"></div>
+            <div class="reel" id="reel3"></div>
         </div>
-
-        <div class="money-counter">
-            <p>Saldo: <span id="money-counter">10</span> PLN</p>
+        <div class="reel-container">
+            <div class="reel" id="reel4"></div>
+            <div class="reel" id="reel5"></div>
+            <div class="reel" id="reel6"></div>
         </div>
-
-        <p id="result-message"></p>
+        <div class="reel-container">
+            <div class="reel" id="reel7"></div>
+            <div class="reel" id="reel8"></div>
+            <div class="reel" id="reel9"></div>
+        </div>
     </div>
+
+    <button id="add-money-button">Dodaj pieniądze</button>
+    <button id="spin-button">Spin</button>
+    <select id="bet">
+        <option value="1">1 PLN</option>
+        <option value="5">5 PLN</option>
+        <option value="10">10 PLN</option>
+    </select>
+    <p>Saldo: <span id="money-counter">10</span> PLN</p>
+    <p id="result-message"></p>
 
     <script src="script.js"></script>
 </body>
