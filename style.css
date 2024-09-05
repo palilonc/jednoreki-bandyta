@@ -24,8 +24,8 @@ h1 {
 }
 
 .reel {
-    width: 150px;
-    height: 150px;
+    width: 120px; /* Dopasowane do większych symboli */
+    height: 120px; /* Dopasowane do większych symboli */
     background-color: #333;
     border: 2px solid #fff;
     border-radius: 5px;
@@ -33,8 +33,12 @@ h1 {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 3.5em; /* Zwiększono rozmiar symboli */
+    font-size: 4em; /* Powiększenie symboli */
     color: #fff;
+}
+
+.controls {
+    margin-top: 20px;
 }
 
 button {
