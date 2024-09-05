@@ -1,22 +1,22 @@
 body {
     font-family: Arial, sans-serif;
-    background-image: url('/mnt/data/A_vibrant,_retro_casino_slot_machine_background_wi.png'); /* Ścieżka do obrazka tła */
-    background-size: cover; /* Dostosowuje rozmiar obrazka tła do rozmiaru okna */
-    background-position: center; /* Centruje tło */
+    background-image: url('/mnt/data/A_vibrant,_retro_casino_slot_machine_background_wi.png'); /* Correct path for background image */
+    background-size: cover;
+    background-position: center;
     color: #ffa500;
     text-align: center;
 }
 
 h1 {
     font-size: 3em;
-    color: #ff4500; /* Możesz zmienić kolor tekstu, aby pasował do tła */
+    color: #ff4500;
 }
 
 .slot-machine {
     display: inline-block;
     padding: 20px;
     border-radius: 10px;
-    background-color: rgba(34, 34, 34, 0.8); /* Przezroczyste tło dla slotów */
+    background-color: rgba(34, 34, 34, 0.8);
     margin-bottom: 20px;
 }
 
@@ -40,10 +40,6 @@ h1 {
     color: #fff;
 }
 
-.controls {
-    margin-top: 20px;
-}
-
 button {
     padding: 10px 20px;
     font-size: 1em;
@@ -61,4 +57,4 @@ select {
 #money-counter, #total-bet {
     font-weight: bold;
     font-size: 1.5em;
-} 
+}
