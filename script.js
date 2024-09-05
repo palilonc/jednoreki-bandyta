@@ -37,9 +37,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const results = [];
         reels.forEach((reel, index) => {
             const symbol = symbols[Math.floor(Math.random() * symbols.length)];
-            gsap.to(reel, { rotationX: 360, duration: 0.5, ease: "power1.inOut", onComplete: () => {
-                reel.textContent = symbol;
-            }});
+            // Dodajemy animację dla każdego obrotu
+            gsap.to(reel, {
+                rotationX: '+=360',  // Obrót o 360 stopni
+                duration: 0.5 + (index * 0.1),  // Różny czas dla każdego bębna
+                ease: 'power1.inOut',
+                onComplete: () => {
+                    reel.textContent = symbol;
+                }
+            });
             results.push(symbol);
         });
         return results;
