@@ -35,9 +35,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function spinReels() {
         const results = [];
-        reels.forEach((reel) => {
+        reels.forEach((reel, index) => {
             const symbol = symbols[Math.floor(Math.random() * symbols.length)];
-            reel.textContent = symbol;
+            gsap.to(reel, { rotationX: 360, duration: 0.5, ease: "power1.inOut", onComplete: () => {
+                reel.textContent = symbol;
+            }});
             results.push(symbol);
         });
         return results;
