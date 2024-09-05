@@ -1,6 +1,6 @@
 body {
     font-family: Arial, sans-serif;
-    background-image: url(C:\Users\palil\Downloads\Zrzut ekranu 2024-09-05 055548.png); /* Ścieżka do obrazka tła */
+    background-image: url('images/Zrzut-ekranu-2024-09-05-055548.png'); /* Ścieżka do obrazka tła */
     background-size: cover; /* Dostosowuje rozmiar obrazka tła do rozmiaru okna */
     background-position: center; /* Centruje tło */
     color: #ffa500;
