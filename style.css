@@ -1,37 +1,57 @@
-const reels = document.querySelectorAll('.reel');
-const spinButton = document.getElementById('spinButton');
-const resultDisplay = document.getElementById('result');
+body {
+    font-family: Arial, sans-serif;
+    background-color: #333;
+    color: #ffa500;
+    text-align: center;
+}
 
-const symbols = [
-    '🍒', '🍋', '🍊', '🔔', '❼', '⭐' // Dodaj więcej symboli lub użyj obrazków
-];
+h1 {
+    font-size: 3em;
+}
 
-spinButton.addEventListener('click', () => {
-    reels.forEach(reel => {
-        reel.innerHTML = ''; // Wyczyść poprzednie symbole
+.slot-machine {
+    display: inline-block;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #222;
+    margin-bottom: 20px;
+}
 
-        for (let i = 0; i < 3; i++) {
-            const randomIndex = Math.floor(Math.random() * symbols.length);
-            const symbol = document.createElement('div');
-            symbol.classList.add('symbol');
-            symbol.textContent = symbols[randomIndex];
-            reel.appendChild(symbol);
-        }
-    });
+.row {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+}
 
-    // Tutaj dodaj logikę sprawdzania wygranej i wyświetlania wyniku
-    checkWin();
-});
+.reel {
+    width: 100px;
+    height: 100px;
+    background-color: #333;
+    border: 2px solid #fff;
+    border-radius: 5px;
+    margin: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2em;
+    color: #fff;
+}
 
-function checkWin() {
-    // Prosta logika sprawdzania wygranej (możesz ją rozbudować)
-    const reel1Symbols = Array.from(reels[0].children).map(symbol => symbol.textContent);
-    const reel2Symbols = Array.from(reels[1].children).map(symbol => symbol.textContent);
-    const reel3Symbols = Array.from(reels[2].children).map(symbol => symbol.textContent);
+button {
+    padding: 10px 20px;
+    font-size: 1em;
+    margin: 10px;
+    cursor: pointer;
+    background-color: #ffa500;
+    border: none;
+    border-radius: 5px;
+}
 
-    if (reel1Symbols[1] === reel2Symbols[1] && reel2Symbols[1] === reel3Symbols[1]) {
-        resultDisplay.textContent = 'Wygrana!';
-    } else {
-        resultDisplay.textContent = 'Spróbuj ponownie';
-    }
+select {
+    padding: 5px;
+}
+
+#money-counter, #total-bet {
+    font-weight: bold;
+    font-size: 1.5em;
 }
