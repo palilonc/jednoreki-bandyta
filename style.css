@@ -1,29 +1,21 @@
 body {
     font-family: Arial, sans-serif;
-    background-image: url('images/Zrzut-ekranu-2024-09-05-055548.png'); /* Correct path for background image */
-    background-size: cover;
-    background-position: center;
+    background-color: #333; /* Szare tło */
     color: #ffa500;
     text-align: center;
 }
 
 h1 {
     font-size: 3em;
-    color: #ff4500;
+    color: #ff4500; /* Możesz zmienić kolor tekstu, aby pasował do tła */
 }
 
 .slot-machine {
     display: inline-block;
     padding: 20px;
     border-radius: 10px;
-    background-color: rgba(34, 34, 34, 0.8);
+    background-color: rgba(34, 34, 34, 0.8); /* Przezroczyste tło dla slotów */
     margin-bottom: 20px;
-}
-
-.row {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 10px;
 }
 
 .reel {
@@ -38,23 +30,4 @@ h1 {
     justify-content: center;
     font-size: 4em;
     color: #fff;
-}
-
-button {
-    padding: 10px 20px;
-    font-size: 1em;
-    margin: 10px;
-    cursor: pointer;
-    background-color: #ffa500;
-    border: none;
-    border-radius: 5px;
-}
-
-select {
-    padding: 5px;
-}
-
-#money-counter, #total-bet {
-    font-weight: bold;
-    font-size: 1.5em;
 }
