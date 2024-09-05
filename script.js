@@ -53,13 +53,43 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    // Sprawdzenie wyniku gry
+    // Funkcja do sprawdzania wyniku gry
     const checkResult = () => {
-        const selectedSymbols = reels.map(reel => reel.children[1].innerText);
-        const uniqueSymbols = [...new Set(selectedSymbols)];
-        
-        if (uniqueSymbols.length === 1) {
-            gsap.to(reels, { scale: 1.1, duration: 0.5, yoyo: true, repeat: 3 });
+        const grid = [
+            reels[0].children[1].innerText,
+            reels[1].children[1].innerText,
+            reels[2].children[1].innerText,
+            reels[3].children[1].innerText,
+            reels[4].children[1].innerText,
+            reels[5].children[1].innerText,
+            reels[6].children[1].innerText,
+            reels[7].children[1].innerText,
+            reels[8].children[1].innerText,
+        ];
+
+        // Możliwe linie wygrywające: poziome, pionowe i ukośne
+        const winningLines = [
+            [0, 1, 2],  // Pierwszy rząd
+            [3, 4, 5],  // Drugi rząd
+            [6, 7, 8],  // Trzeci rząd
+            [0, 3, 6],  // Pierwsza kolumna
+            [1, 4, 7],  // Druga kolumna
+            [2, 5, 8],  // Trzecia kolumna
+            [0, 4, 8],  // Ukośna (górny lewy do dolny prawy)
+            [2, 4, 6],  // Ukośna (górny prawy do dolny lewy)
+        ];
+
+        let win = false;
+
+        // Sprawdzanie, czy są trzy te same symbole w wygrywających liniach
+        winningLines.forEach(line => {
+            if (grid[line[0]] === grid[line[1]] && grid[line[1]] === grid[line[2]]) {
+                win = true;
+                gsap.to([reels[line[0]], reels[line[1]], reels[line[2]]], { scale: 1.2, duration: 0.5, yoyo: true, repeat: 2 });
+            }
+        });
+
+        if (win) {
             resultMessage.innerText = 'Wygrałeś!';
             balance += parseInt(betSelect.value) * 10; // Wygrana mnożona przez stawkę
         } else {
@@ -86,4 +116,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Dodanie pieniędzy
     addMoneyButton.addEventListener('click', () => {
         balance += 10;
-        moneyCounter.inner
+        moneyCounter.innerText = balance;
+    });
+});
