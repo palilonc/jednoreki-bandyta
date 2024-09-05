@@ -2,27 +2,29 @@ document.addEventListener('DOMContentLoaded', () => {
     const reels = [
         document.getElementById('reel1'),
         document.getElementById('reel2'),
-        document.getElementById('reel3'),
-        document.getElementById('reel4'),
-        document.getElementById('reel5'),
-        document.getElementById('reel6'),
-        document.getElementById('reel7'),
-        document.getElementById('reel8'),
-        document.getElementById('reel9')
+        document.getElementById('reel3')
     ];
 
     const spinButton = document.getElementById('spin-button');
     const addMoneyButton = document.getElementById('add-money-button');
     const resultMessage = document.getElementById('result-message');
     const moneyCounter = document.getElementById('money-counter');
+    const linesSelect = document.getElementById('lines');
     const betSelect = document.getElementById('bet');
+    const creditPriceSelect = document.getElementById('credit-price');
+    const totalBetDisplay = document.getElementById('total-bet');
 
     const symbols = ['🍒', '🍉', '🍋', '🍇', '🍓', '🍊'];
 
-    let balance = 10;
+    let balance = 100;
 
     function updateMoneyCounter() {
-        moneyCounter.textContent = balance;
+        moneyCounter.textContent = (balance * parseFloat(creditPriceSelect.value)).toFixed(2);
+    }
+
+    function updateTotalBet() {
+        const totalBet = betSelect.value * linesSelect.value * creditPriceSelect.value;
+        totalBetDisplay.textContent = totalBet.toFixed(2);
     }
 
     function spinReels() {
@@ -37,41 +39,41 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function checkWin(results) {
         const winLines = [
-            [0, 1, 2],  // Top row
-            [3, 4, 5],  // Middle row
-            [6, 7, 8],  // Bottom row
-            [0, 4, 8],  // Diagonal \
-            [2, 4, 6]   // Diagonal /
+            [0, 1, 2]  // Jedyna linia wygrywająca w wersji podstawowej
         ];
 
-        for (let line of winLines) {
+        let winAmount = 0;
+        winLines.forEach(line => {
             const [a, b, c] = line;
             if (results[a] === results[b] && results[b] === results[c]) {
-                return results[a]; // Zwraca symbol, jeśli jest wygrana
+                winAmount += betSelect.value * 5; // Wygrana za 3 identyczne symbole
             }
-        }
-        return null;
+        });
+
+        return winAmount;
     }
 
     spinButton.addEventListener('click', () => {
         const bet = parseInt(betSelect.value);
+        const lines = parseInt(linesSelect.value);
+        const totalBet = bet * lines;
 
-        if (balance >= bet) {
-            balance -= bet;
+        if (balance >= totalBet) {
+            balance -= totalBet;
             updateMoneyCounter();
 
             const results = spinReels();
-            const winSymbol = checkWin(results);
+            const winAmount = checkWin(results);
 
-            if (winSymbol) {
-                const winAmount = bet * 5; // Można zmienić stawkę wygranej
+            if (winAmount > 0) {
                 balance += winAmount;
-                resultMessage.textContent = `Wygrałeś ${winAmount} PLN za ${winSymbol}!`;
+                resultMessage.textContent = `Wygrałeś ${winAmount} PLN!`;
             } else {
                 resultMessage.textContent = "Brak wygranej, spróbuj ponownie!";
             }
 
             updateMoneyCounter();
+            updateTotalBet();
         } else {
             resultMessage.textContent = "Brak wystarczających środków!";
         }
@@ -82,5 +84,10 @@ document.addEventListener('DOMContentLoaded', () => {
         updateMoneyCounter();
     });
 
+    linesSelect.addEventListener('change', updateTotalBet);
+    betSelect.addEventListener('change', updateTotalBet);
+    creditPriceSelect.addEventListener('change', updateTotalBet);
+
     updateMoneyCounter();
+    updateTotalBet();
 });
