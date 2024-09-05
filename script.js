@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function spinReels() {
         const results = [];
-        reels.forEach((reel, index) => {
+        reels.forEach((reel) => {
             const symbol = symbols[Math.floor(Math.random() * symbols.length)];
             reel.textContent = symbol;
             results.push(symbol);
