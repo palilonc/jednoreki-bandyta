@@ -20,7 +20,6 @@ h1 {
 .reel-container {
     display: flex;
     justify-content: center;
-    margin-bottom: 10px;
 }
 
 .reel {
@@ -51,7 +50,7 @@ select {
     padding: 5px;
 }
 
-#money-counter {
+#money-counter, #total-bet {
     font-weight: bold;
     font-size: 1.5em;
 }
