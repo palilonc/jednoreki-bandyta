@@ -1,22 +1,22 @@
 body {
     font-family: Arial, sans-serif;
-    background-image: url('C:\Users\palil\Desktop\cos\maszyny\images\Zrzut ekranu 2024-09-05 055548.png'); /* Zaktualizowana ścieżka */
-    background-size: cover; /* Rozciągnie obraz na całe tło */
-    background-position: center; /* Wyśrodkuje obraz */
+    background-image: url('/mnt/data/A_vibrant,_retro_casino_slot_machine_background_wi.png'); /* Ścieżka do obrazka tła */
+    background-size: cover; /* Dostosowuje rozmiar obrazka tła do rozmiaru okna */
+    background-position: center; /* Centruje tło */
     color: #ffa500;
     text-align: center;
 }
 
 h1 {
     font-size: 3em;
-    color: #ff4500; /* Kolor tekstu */
+    color: #ff4500; /* Możesz zmienić kolor tekstu, aby pasował do tła */
 }
 
 .slot-machine {
     display: inline-block;
     padding: 20px;
     border-radius: 10px;
-    background-color: rgba(34, 34, 34, 0.8); /* Przezroczyste ciemne tło dla slotów */
+    background-color: rgba(34, 34, 34, 0.8); /* Przezroczyste tło dla slotów */
     margin-bottom: 20px;
 }
 
@@ -29,7 +29,7 @@ h1 {
 .reel {
     width: 120px;
     height: 120px;
-    background-color: transparent; /* Przezroczyste tło dla symboli */
+    background-color: #333;
     border: 2px solid #fff;
     border-radius: 5px;
     margin: 5px;
@@ -61,4 +61,4 @@ select {
 #money-counter, #total-bet {
     font-weight: bold;
     font-size: 1.5em;
-}
+} 
