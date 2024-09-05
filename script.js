@@ -28,10 +28,17 @@ function checkWin() {
     const reel1Symbols = Array.from(reels[0].children).map(symbol => symbol.textContent);
     const reel2Symbols = Array.from(reels[1].children).map(symbol => symbol.textContent);
     const reel3Symbols = Array.from(reels[2].children).map(symbol => symbol.textContent);
+// ... (poprzedni kod JavaScript)
 
-    if (reel1Symbols[1] === reel2Symbols[1] && reel2Symbols[1] === reel3Symbols[1]) {
-        resultDisplay.textContent = 'Wygrana!';
-    } else {
-        resultDisplay.textContent = 'Spróbuj ponownie';
-    }
-}
+    const startButton = document.getElementById('startButton'); // Zakładam, że przycisk ma id 'startButton'
+    const addButton = document.getElementById('addButton'); // Zakładam, że przycisk ma id 'addButton'
+
+    startButton.addEventListener('click', () => {
+    // Tutaj umieść logikę uruchamiania gry (np. losowanie symboli, sprawdzanie wygranej)
+    console.log('Przycisk Start został kliknięty!'); 
+});
+
+     addButton.addEventListener('click', () => {
+    // Tutaj umieść logikę dodawania zakładu (np. zwiększanie wartości zakładu na linię)
+    console.log('Przycisk Dodaj został kliknięty!'); 
+});
