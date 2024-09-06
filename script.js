@@ -20,7 +20,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const creditPriceSelect = document.getElementById('credit-price');
     const totalBetDisplay = document.getElementById('total-bet');
 
-    const symbols = ['🍒', '🍉', '🍋', '🍇', '🍓', '🍊'];
+    // Nowe symbole
+    const symbols = [
+        { icon: '🍒', points: 0.40 }, // Wiśnie
+        { icon: '🍋', points: 3.20 }, // Cytryny
+        { icon: '🍇', points: 3.20 }, // Winogrona
+        { icon: '⭐', points: 16.00 }, // Gwiazdki
+        { icon: '7️⃣', points: 60.00 }, // Siódemki
+        { icon: '🍊', points: 3.20 }, // Pomarańcze
+        { icon: '🍉', points: 4.80 }  // Arbuz
+    ];
 
     let balance = 100;
 
@@ -35,18 +44,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function spinReels() {
         const results = [];
-        reels.forEach((reel, index) => {
-            const symbol = symbols[Math.floor(Math.random() * symbols.length)];
-            // Dodajemy animację dla każdego obrotu
-            gsap.to(reel, {
-                rotationX: '+=360',  // Obrót o 360 stopni
-                duration: 0.5 + (index * 0.1),  // Różny czas dla każdego bębna
-                ease: 'power1.inOut',
-                onComplete: () => {
-                    reel.textContent = symbol;
-                }
-            });
-            results.push(symbol);
+        reels.forEach((reel) => {
+            const randomSymbol = symbols[Math.floor(Math.random() * symbols.length)];
+            reel.textContent = randomSymbol.icon;
+            results.push(randomSymbol);
         });
         return results;
     }
@@ -63,8 +64,8 @@ document.addEventListener('DOMContentLoaded', () => {
         let winAmount = 0;
         winLines.forEach(line => {
             const [a, b, c] = line;
-            if (results[a] === results[b] && results[b] === results[c]) {
-                winAmount += betSelect.value * 5; // Wygrana za 3 identyczne symbole
+            if (results[a].icon === results[b].icon && results[b].icon === results[c].icon) {
+                winAmount += results[a].points * betSelect.value; // Wygrana na podstawie punktów za 3 identyczne symbole
             }
         });
 
@@ -85,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (winAmount > 0) {
                 balance += winAmount;
-                resultMessage.textContent = `Wygrałeś ${winAmount} PLN!`;
+                resultMessage.textContent = `Wygrałeś ${winAmount.toFixed(2)} PLN!`;
             } else {
                 resultMessage.textContent = "Brak wygranej, spróbuj ponownie!";
             }
