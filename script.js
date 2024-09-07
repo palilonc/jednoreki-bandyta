@@ -76,10 +76,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const tl = gsap.timeline();
         reels.forEach((reel, index) => {
             tl.to(reel, {
-                y: 100, // Symulujemy przewijanie w dół
-                duration: 0.1, 
-                repeat: 15, // Powtórki obrotów
-                yoyo: true, // Powrót na miejsce
+                rotation: 360, // Obrót o 360 stopni
+                duration: 0.3, 
+                repeat: 5, // Powtórki obrotów
+                ease: "power2.inOut", // Płynna animacja
                 onComplete: () => {
                     reel.textContent = symbols[Math.floor(Math.random() * symbols.length)].icon; // Ustawienie symbolu
                 }
