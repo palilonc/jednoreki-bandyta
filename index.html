@@ -5,23 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Always Hot Deluxe - 3x3</title>
     <link rel="stylesheet" href="style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <script src="script.js"></script>
 </head>
 <body>
     <h1>Always Hot Deluxe - 3x3</h1>
 
     <div class="slot-machine">
-        <div class="row">
+        <div class="row" id="row1">
             <div class="reel" id="reel1"></div>
             <div class="reel" id="reel2"></div>
             <div class="reel" id="reel3"></div>
         </div>
-        <div class="row">
+        <div class="row" id="row2">
             <div class="reel" id="reel4"></div>
             <div class="reel" id="reel5"></div>
             <div class="reel" id="reel6"></div>
         </div>
-        <div class="row">
+        <div class="row" id="row3">
             <div class="reel" id="reel7"></div>
             <div class="reel" id="reel8"></div>
             <div class="reel" id="reel9"></div>
@@ -56,7 +56,5 @@
         <p>Zakład całkowity: <span id="total-bet">1</span> PLN</p>
         <p id="result-message"></p>
     </div>
-
-    <script src="script.js"></script>
 </body>
 </html>
