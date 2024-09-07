@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const resultMessage = document.getElementById('result-message');
     const moneyCounter = document.getElementById('money-counter');
     const betSelect = document.getElementById('bet');
-    let apiKey = ''; // Zmienna na klucz API
+    let apiKey = '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'; // Zmienna na klucz API
     let balance = 100;
 
     // Wprowadzenie klucza API OpenAI
