@@ -16,9 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const resultMessage = document.getElementById('result-message');
     const moneyCounter = document.getElementById('money-counter');
     const betSelect = document.getElementById('bet');
-    const winCounter = document.getElementById('win-counter');
-    let apiKey = 'sk-1234abcd5678efghijklmnopqrstuvwx'; // Twój rzeczywisty klucz API OpenAI
- // Zmienna na klucz API
+    let apiKey = ''; // Zmienna na klucz API
     let balance = 100;
 
     // Wprowadzenie klucza API OpenAI
