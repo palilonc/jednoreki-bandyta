@@ -54,22 +54,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function checkWin(results) {
         const winLines = [
-            [0, 1, 2],
-            [3, 4, 5],
-            [6, 7, 8],
-            [0, 4, 8],
-            [2, 4, 6]
+            [0, 1, 2], // Pierwszy rząd
+            [3, 4, 5], // Drugi rząd
+            [6, 7, 8], // Trzeci rząd
+            [0, 4, 8], // Diagonalne od lewej do prawej
+            [2, 4, 6]  // Diagonalne od prawej do lewej
         ];
 
         let winAmount = 0;
+        let winningSymbols = [];
+
         winLines.forEach(line => {
             const [a, b, c] = line;
             if (results[a].icon === results[b].icon && results[b].icon === results[c].icon) {
                 winAmount += results[a].points * betSelect.value;
+                winningSymbols.push(reels[a], reels[b], reels[c]);
             }
         });
 
-        return winAmount;
+        return { winAmount, winningSymbols };
     }
 
     function animateReels() {
@@ -88,10 +91,25 @@ document.addEventListener('DOMContentLoaded', () => {
         return tl;
     }
 
+    function animateWinningSymbols(winningSymbols) {
+        winningSymbols.forEach(symbol => {
+            gsap.to(symbol, { 
+                scale: 1.5, 
+                repeat: 3, 
+                yoyo: true, 
+                duration: 0.3,
+                backgroundColor: "#ff4500"
+            });
+        });
+    }
+
     spinButton.addEventListener('click', () => {
         const bet = parseInt(betSelect.value);
         const lines = parseInt(linesSelect.value);
         const totalBet = bet * lines;
+
+        // Resetujemy animację zwycięskich symboli
+        reels.forEach(reel => gsap.set(reel, { scale: 1, backgroundColor: "#333" }));
 
         if (balance >= totalBet) {
             balance -= totalBet;
@@ -99,11 +117,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
             animateReels().then(() => {
                 const results = spinReels();
-                const winAmount = checkWin(results);
+                const { winAmount, winningSymbols } = checkWin(results);
 
                 if (winAmount > 0) {
                     balance += winAmount;
                     resultMessage.textContent = `Wygrałeś ${winAmount.toFixed(2)} PLN!`;
+                    animateWinningSymbols(winningSymbols);
                 } else {
                     resultMessage.textContent = "Brak wygranej, spróbuj ponownie!";
                 }
