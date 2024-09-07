@@ -20,16 +20,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const creditPriceSelect = document.getElementById('credit-price');
     const totalBetDisplay = document.getElementById('total-bet');
 
-    // Zaktualizowane symbole z punktami
     const symbols = [
-        { icon: '🍒', points: 3.20 }, // Wiśnie
-        { icon: '🍋', points: 3.20 }, // Cytryny
-        { icon: '🍇', points: 3.20 }, // Winogrona
-        { icon: '⭐', points: 16.00 }, // Gwiazdki
-        { icon: '7️⃣', points: 60.00 }, // Siódemki
-        { icon: '🍊', points: 3.20 }, // Pomarańcze
-        { icon: '❌', points: 0.40 },  // X
-        { icon: '🍉', points: 4.80 }   // BAR (Arbuz)
+        { icon: '🍒', points: 3.20 },
+        { icon: '🍋', points: 3.20 },
+        { icon: '🍇', points: 3.20 },
+        { icon: '⭐', points: 16.00 },
+        { icon: '7️⃣', points: 60.00 },
+        { icon: '🍊', points: 3.20 },
+        { icon: '❌', points: 0.40 },
+        { icon: '🍉', points: 4.80 }
     ];
 
     let balance = 100;
@@ -55,22 +54,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function checkWin(results) {
         const winLines = [
-            [0, 1, 2], // Pierwszy rząd
-            [3, 4, 5], // Drugi rząd
-            [6, 7, 8], // Trzeci rząd
-            [0, 4, 8], // Diagonalne od lewej do prawej
-            [2, 4, 6]  // Diagonalne od prawej do lewej
+            [0, 1, 2],
+            [3, 4, 5],
+            [6, 7, 8],
+            [0, 4, 8],
+            [2, 4, 6]
         ];
 
         let winAmount = 0;
         winLines.forEach(line => {
             const [a, b, c] = line;
             if (results[a].icon === results[b].icon && results[b].icon === results[c].icon) {
-                winAmount += results[a].points * betSelect.value; // Wygrana na podstawie punktów za 3 identyczne symbole
+                winAmount += results[a].points * betSelect.value;
             }
         });
 
         return winAmount;
+    }
+
+    function animateReels() {
+        const tl = gsap.timeline();
+        reels.forEach((reel, index) => {
+            tl.to(reel, {
+                y: 100, // Symulujemy przewijanie w dół
+                duration: 0.1, 
+                repeat: 15, // Powtórki obrotów
+                yoyo: true, // Powrót na miejsce
+                onComplete: () => {
+                    reel.textContent = symbols[Math.floor(Math.random() * symbols.length)].icon; // Ustawienie symbolu
+                }
+            }, index * 0.1); // Opóźniamy o 0.1 sekundy dla każdego bębna
+        });
+        return tl;
     }
 
     spinButton.addEventListener('click', () => {
@@ -82,25 +97,27 @@ document.addEventListener('DOMContentLoaded', () => {
             balance -= totalBet;
             updateMoneyCounter();
 
-            const results = spinReels();
-            const winAmount = checkWin(results);
+            animateReels().then(() => {
+                const results = spinReels();
+                const winAmount = checkWin(results);
 
-            if (winAmount > 0) {
-                balance += winAmount;
-                resultMessage.textContent = `Wygrałeś ${winAmount.toFixed(2)} PLN!`;
-            } else {
-                resultMessage.textContent = "Brak wygranej, spróbuj ponownie!";
-            }
+                if (winAmount > 0) {
+                    balance += winAmount;
+                    resultMessage.textContent = `Wygrałeś ${winAmount.toFixed(2)} PLN!`;
+                } else {
+                    resultMessage.textContent = "Brak wygranej, spróbuj ponownie!";
+                }
 
-            updateMoneyCounter();
-            updateTotalBet();
+                updateMoneyCounter();
+                updateTotalBet();
+            });
         } else {
             resultMessage.textContent = "Brak wystarczających środków!";
         }
     });
 
     addMoneyButton.addEventListener('click', () => {
-        balance += 10; // Dodajemy 10 PLN
+        balance += 10;
         updateMoneyCounter();
     });
 
