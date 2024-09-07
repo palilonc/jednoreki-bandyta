@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const resultMessage = document.getElementById('result-message');
     const moneyCounter = document.getElementById('money-counter');
     const betSelect = document.getElementById('bet');
+    const winCounter = document.getElementById('win-counter'); // Dodajemy licznik wygranej
     
     // Tabela płatności przy zakładzie 15 zł (za cały obrót)
     const basePayouts = {
@@ -126,6 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Resetujemy animację zwycięskich symboli
         reels.forEach(reel => gsap.set(reel, { scale: 1, backgroundColor: "#333" }));
+        winCounter.style.display = 'none'; // Ukrywamy licznik wygranej przed obrotem
 
         if (balance >= totalBet) {
             balance -= totalBet;
@@ -141,6 +143,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (winAmount > 0) {
                     balance += winAmount;
                     resultMessage.textContent = `Wygrałeś ${winAmount.toFixed(2)} PLN!`;
+                    winCounter.textContent = `Wygrana: ${winAmount.toFixed(2)} PLN`; // Wyświetlamy wygraną
+                    winCounter.style.display = 'block'; // Pokazujemy licznik wygranej
                     animateWinningSymbols(winningSymbols);
                 } else {
                     resultMessage.textContent = "Brak wygranej, spróbuj ponownie!";
