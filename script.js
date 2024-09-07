@@ -15,11 +15,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const addMoneyButton = document.getElementById('add-money-button');
     const resultMessage = document.getElementById('result-message');
     const moneyCounter = document.getElementById('money-counter');
-    const linesSelect = document.getElementById('lines');
     const betSelect = document.getElementById('bet');
     
     // Ustawienie stałej wartości żetonu
     const creditPrice = 1; // Stała wartość żetonu wynosi 1 PLN
+
+    // Ustawienie stałej liczby linii na 5
+    const lines = 5; // Zawsze 5 linii
 
     const symbols = [
         { icon: '🍒', points: 3.20 },
@@ -39,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateTotalBet() {
-        const totalBet = betSelect.value * linesSelect.value * creditPrice; // Stała wartość żetonu
+        const totalBet = betSelect.value * lines * creditPrice; // Stała liczba linii 5
         totalBetDisplay.textContent = totalBet.toFixed(2);
     }
 
@@ -77,21 +79,25 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function animateReels() {
-        const tl = gsap.timeline();
+        const tl = gsap.timeline(); // Używamy GSAP do animacji
         reels.forEach((reel, index) => {
             tl.to(reel, {
-                y: -500, // Przesuwamy symbol w górę
+                y: -100, // Przesuwamy symbol w górę
                 duration: 0.1, 
-                repeat: 10, // Obraca 10 razy
+                repeat: 10, // Obraca się 10 razy
                 ease: "none", // Bez płynnych przejść, równa prędkość
                 onRepeat: () => {
-                    reel.textContent = symbols[Math.floor(Math.random() * symbols.length)].icon; // Zmienia symbol przy każdym obrocie
+                    // Losujemy i przypisujemy nowy symbol do każdego obrotu
+                    const randomSymbol = symbols[Math.floor(Math.random() * symbols.length)];
+                    reel.textContent = randomSymbol.icon;
                 },
                 onComplete: () => {
-                    reel.textContent = symbols[Math.floor(Math.random() * symbols.length)].icon; // Ustawienie ostatecznego symbolu
-                    gsap.set(reel, { y: 0 }); // Resetuje pozycję
+                    // Ostatecznie ustawiamy symbol po zakończeniu obrotu
+                    const finalSymbol = symbols[Math.floor(Math.random() * symbols.length)];
+                    reel.textContent = finalSymbol.icon;
+                    gsap.set(reel, { y: 0 }); // Resetujemy pozycję do początkowej
                 }
-            }, index * 0.1); // Dodaje opóźnienie między bębnami, aby obróciły się jeden po drugim
+            }, index * 0.1); // Dodajemy opóźnienie między obrotami kolejnych bębnów
         });
         return tl;
     }
@@ -110,8 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     spinButton.addEventListener('click', () => {
         const bet = parseInt(betSelect.value);
-        const lines = parseInt(linesSelect.value);
-        const totalBet = bet * lines * creditPrice; // Zawsze 1 PLN za żeton
+        const totalBet = bet * lines * creditPrice; // Stała wartość żetonu 1 PLN
 
         // Resetujemy animację zwycięskich symboli
         reels.forEach(reel => gsap.set(reel, { scale: 1, backgroundColor: "#333" }));
@@ -120,10 +125,13 @@ document.addEventListener('DOMContentLoaded', () => {
             balance -= totalBet;
             updateMoneyCounter();
 
+            // Obracamy bębny
             animateReels().then(() => {
+                // Po zakończeniu animacji obrotu, sprawdzamy wynik
                 const results = spinReels();
                 const { winAmount, winningSymbols } = checkWin(results);
 
+                // Jeśli jest wygrana, dodajemy kwotę i animujemy zwycięskie symbole
                 if (winAmount > 0) {
                     balance += winAmount;
                     resultMessage.textContent = `Wygrałeś ${winAmount.toFixed(2)} PLN!`;
@@ -145,7 +153,6 @@ document.addEventListener('DOMContentLoaded', () => {
         updateMoneyCounter();
     });
 
-    linesSelect.addEventListener('change', updateTotalBet);
     betSelect.addEventListener('change', updateTotalBet);
 
     updateMoneyCounter();
