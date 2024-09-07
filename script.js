@@ -21,14 +21,25 @@ document.addEventListener('DOMContentLoaded', () => {
     // Ustawienie stałej wartości żetonu
     const creditPrice = 1; // Stała wartość żetonu wynosi 1 PLN
 
+    const symbols = [
+        { icon: '🍒', points: 3.20 },
+        { icon: '🍋', points: 3.20 },
+        { icon: '🍇', points: 3.20 },
+        { icon: '⭐', points: 16.00 },
+        { icon: '7️⃣', points: 60.00 },
+        { icon: '🍊', points: 3.20 },
+        { icon: '❌', points: 0.40 },
+        { icon: '🍉', points: 4.80 }
+    ];
+
     let balance = 100;
 
     function updateMoneyCounter() {
-        moneyCounter.textContent = (balance * creditPrice).toFixed(2); // Zawsze 1 PLN
+        moneyCounter.textContent = balance.toFixed(2); // Ustawione na stałe 1 PLN za żeton
     }
 
     function updateTotalBet() {
-        const totalBet = betSelect.value * linesSelect.value * creditPrice; // Zawsze 1 PLN za żeton
+        const totalBet = betSelect.value * linesSelect.value * creditPrice; // Stała wartość żetonu
         totalBetDisplay.textContent = totalBet.toFixed(2);
     }
 
@@ -36,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const results = [];
         reels.forEach((reel) => {
             const randomSymbol = symbols[Math.floor(Math.random() * symbols.length)];
-            reel.textContent = randomSymbol.icon;
+            reel.textContent = randomSymbol.icon; // Wyświetlamy odpowiednie ikony
             results.push(randomSymbol);
         });
         return results;
