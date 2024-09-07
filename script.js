@@ -79,14 +79,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const tl = gsap.timeline();
         reels.forEach((reel, index) => {
             tl.to(reel, {
-                rotation: 360, // Obrót o 360 stopni
-                duration: 0.3, 
-                repeat: 5, // Powtórki obrotów
-                ease: "power2.inOut", // Płynna animacja
+                y: -500, // Przesuwamy symbol w górę
+                duration: 0.1, 
+                repeat: 10, // Obraca 10 razy
+                ease: "none", // Bez płynnych przejść, równa prędkość
+                onRepeat: () => {
+                    reel.textContent = symbols[Math.floor(Math.random() * symbols.length)].icon; // Zmienia symbol przy każdym obrocie
+                },
                 onComplete: () => {
-                    reel.textContent = symbols[Math.floor(Math.random() * symbols.length)].icon; // Ustawienie symbolu
+                    reel.textContent = symbols[Math.floor(Math.random() * symbols.length)].icon; // Ustawienie ostatecznego symbolu
+                    gsap.set(reel, { y: 0 }); // Resetuje pozycję
                 }
-            }, index * 0.1); // Opóźniamy o 0.1 sekundy dla każdego bębna
+            }, index * 0.1); // Dodaje opóźnienie między bębnami, aby obróciły się jeden po drugim
         });
         return tl;
     }
