@@ -17,9 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const moneyCounter = document.getElementById('money-counter');
     const betSelect = document.getElementById('bet');
     
-    const lines = 5; // Liczba linii
-
-    // Tabela płatności przy zakładzie 15 zł
+    // Tabela płatności przy zakładzie 15 zł (za cały obrót)
     const basePayouts = {
         'X': 15,
         '🍒🍋🍇🍊': 120, // Cytryny / Wiśnie / Śliwki / Pomarańcze
@@ -46,9 +44,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateTotalBet() {
-        const bet = parseInt(betSelect.value); // Aktualny zakład na linię w złotówkach
-        const totalBet = bet * lines; // Liczba linii to 5
-        totalBetDisplay.textContent = totalBet.toFixed(2);
+        const bet = parseInt(betSelect.value); // Aktualny zakład za cały obrót
+        totalBetDisplay.textContent = bet.toFixed(2);
     }
 
     function spinReels() {
@@ -62,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function calculatePayout(bet, basePayout) {
-        // Proporcjonalna wygrana na podstawie zakładu
+        // Proporcjonalna wygrana na podstawie zakładu (cały obrót)
         return (basePayout / 15) * bet; // Tabela odnosi się do zakładu 15 zł
     }
 
@@ -75,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
             [2, 4, 6]  // Diagonalne od prawej do lewej
         ];
 
-        const bet = parseInt(betSelect.value); // Pobieramy aktualny zakład na linię
+        const bet = parseInt(betSelect.value); // Pobieramy aktualny zakład za obrót
         let winAmount = 0;
         let winningSymbols = [];
 
@@ -129,8 +126,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     spinButton.addEventListener('click', () => {
-        const bet = parseInt(betSelect.value); // Zakład na linię w złotówkach
-        const totalBet = bet * lines; // Całkowity zakład (5 linii)
+        const bet = parseInt(betSelect.value); // Zakład za obrót
+        const totalBet = bet; // Całkowity zakład = zakład za obrót
 
         // Resetujemy animację zwycięskich symboli
         reels.forEach(reel => gsap.set(reel, { scale: 1, backgroundColor: "#333" }));
