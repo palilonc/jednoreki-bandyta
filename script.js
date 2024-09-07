@@ -17,10 +17,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const moneyCounter = document.getElementById('money-counter');
     const betSelect = document.getElementById('bet');
     
-    // Ustawienie stałej wartości żetonu
-    const creditPrice = 1; // Stała wartość żetonu wynosi 1 PLN
+    const lines = 5; // Liczba linii
 
-    // Tabela płatności przy zakładzie 15 kredytów
+    // Tabela płatności przy zakładzie 15 zł
     const basePayouts = {
         'X': 15,
         '🍒🍋🍇🍊': 120, // Cytryny / Wiśnie / Śliwki / Pomarańcze
@@ -43,11 +42,12 @@ document.addEventListener('DOMContentLoaded', () => {
     let balance = 100;
 
     function updateMoneyCounter() {
-        moneyCounter.textContent = balance.toFixed(2); // Ustawione na stałe 1 PLN za żeton
+        moneyCounter.textContent = balance.toFixed(2); // Wyświetla saldo w złotówkach
     }
 
     function updateTotalBet() {
-        const totalBet = betSelect.value * 5 * creditPrice; // Zakład na linię, 5 linii
+        const bet = parseInt(betSelect.value); // Aktualny zakład na linię w złotówkach
+        const totalBet = bet * lines; // Liczba linii to 5
         totalBetDisplay.textContent = totalBet.toFixed(2);
     }
 
@@ -62,8 +62,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function calculatePayout(bet, basePayout) {
-        // Wygrana jest proporcjonalna do zakładu
-        return (basePayout / 15) * bet; // Zakład bazowy to 15
+        // Proporcjonalna wygrana na podstawie zakładu
+        return (basePayout / 15) * bet; // Tabela odnosi się do zakładu 15 zł
     }
 
     function checkWin(results) {
@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
             [2, 4, 6]  // Diagonalne od prawej do lewej
         ];
 
-        const bet = parseInt(betSelect.value); // Pobieramy aktualny zakład
+        const bet = parseInt(betSelect.value); // Pobieramy aktualny zakład na linię
         let winAmount = 0;
         let winningSymbols = [];
 
@@ -129,8 +129,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     spinButton.addEventListener('click', () => {
-        const bet = parseInt(betSelect.value);
-        const totalBet = bet * 5 * creditPrice; // Stała wartość żetonu 1 PLN
+        const bet = parseInt(betSelect.value); // Zakład na linię w złotówkach
+        const totalBet = bet * lines; // Całkowity zakład (5 linii)
 
         // Resetujemy animację zwycięskich symboli
         reels.forEach(reel => gsap.set(reel, { scale: 1, backgroundColor: "#333" }));
