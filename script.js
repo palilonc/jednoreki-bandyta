@@ -12,12 +12,8 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
     const spinButton = document.getElementById('spin-button');
-    const addMoneyButton = document.getElementById('add-money-button');
     const resultMessage = document.getElementById('result-message');
-    const moneyCounter = document.getElementById('money-counter');
-    const betSelect = document.getElementById('bet');
     let apiKey = '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'; // Zmienna na klucz API
-    let balance = 100;
 
     // Wprowadzenie klucza API OpenAI
     document.getElementById('save-api-key').addEventListener('click', () => {
@@ -25,17 +21,17 @@ document.addEventListener('DOMContentLoaded', () => {
         alert('Klucz API zapisany!');
     });
 
-    // Wysyłanie zapytania do OpenAI
-    document.getElementById('send-query').addEventListener('click', async () => {
-        const query = document.getElementById('query').value;
+    // Wysyłanie wiadomości do ChatGPT
+    document.getElementById('send-message').addEventListener('click', async () => {
+        const message = document.getElementById('chat-message').value;
 
         if (!apiKey) {
             alert('Wprowadź klucz API.');
             return;
         }
 
-        if (!query) {
-            alert('Wprowadź zapytanie.');
+        if (!message) {
+            alert('Wprowadź wiadomość.');
             return;
         }
 
@@ -48,8 +44,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 },
                 body: JSON.stringify({
                     model: 'gpt-4',
-                    prompt: query,
-                    max_tokens: 100
+                    prompt: message,
+                    max_tokens: 150
                 })
             });
 
@@ -57,15 +53,11 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('response').textContent = data.choices[0].text;
         } catch (error) {
             console.error('Błąd:', error);
-            alert('Wystąpił problem z wysyłaniem zapytania.');
+            alert('Wystąpił problem z wysyłaniem wiadomości.');
         }
     });
 
     // Obsługa maszyny slotowej
-    function updateMoneyCounter() {
-        moneyCounter.textContent = balance.toFixed(2);
-    }
-
     function spinReels() {
         const symbols = ['🍒', '🍋', '🍇', '🍊', 'BAR', '⭐', '7️⃣', 'X'];
         reels.forEach((reel) => {
@@ -75,21 +67,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     spinButton.addEventListener('click', () => {
-        const bet = parseInt(betSelect.value);
-        if (balance >= bet) {
-            balance -= bet;
-            updateMoneyCounter();
-            spinReels();
-            resultMessage.textContent = "Spróbuj ponownie!";
-        } else {
-            resultMessage.textContent = "Brak wystarczających środków!";
-        }
+        spinReels();
     });
-
-    addMoneyButton.addEventListener('click', () => {
-        balance += 10;
-        updateMoneyCounter();
-    });
-
-    updateMoneyCounter();
 });
