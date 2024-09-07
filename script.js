@@ -43,11 +43,6 @@ document.addEventListener('DOMContentLoaded', () => {
         moneyCounter.textContent = balance.toFixed(2); // Wyświetla saldo w złotówkach
     }
 
-    function updateTotalBet() {
-        const bet = parseInt(betSelect.value); // Aktualny zakład za cały obrót
-        totalBetDisplay.textContent = bet.toFixed(2); // Całkowity zakład = zakład za obrót
-    }
-
     function spinReels() {
         const results = [];
         reels.forEach((reel) => {
@@ -152,7 +147,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 updateMoneyCounter();
-                updateTotalBet();
             });
         } else {
             resultMessage.textContent = "Brak wystarczających środków!";
@@ -164,8 +158,9 @@ document.addEventListener('DOMContentLoaded', () => {
         updateMoneyCounter();
     });
 
-    betSelect.addEventListener('change', updateTotalBet);
+    betSelect.addEventListener('change', () => {
+        // Aktualizacja zakładu po zmianie wyboru zakładu
+    });
 
     updateMoneyCounter();
-    updateTotalBet();
 });
