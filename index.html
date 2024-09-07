@@ -8,7 +8,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
     <script src="script.js"></script>
     <style>
-        /* Style dla slotów i kwadratowych symboli */
         .slot-machine-container {
             display: flex;
             justify-content: center;
@@ -20,7 +19,7 @@
             color: gold;
             font-weight: bold;
             margin-right: 20px;
-            display: none; /* Początkowo ukrywamy licznik wygranej */
+            display: none;
         }
 
         .slot-machine {
@@ -75,10 +74,8 @@
     <h1>Always Hot Deluxe - 3x3</h1>
 
     <div class="slot-machine-container">
-        <!-- Licznik wygranej -->
         <div id="win-counter" class="win-counter"></div>
 
-        <!-- Maszyna slotowa -->
         <div class="slot-machine">
             <div class="row" id="row1">
                 <div class="reel" id="reel1"></div>
@@ -113,5 +110,183 @@
         <p>Saldo: <span id="money-counter">100</span> PLN</p>
         <p id="result-message"></p>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const reels = [
+                document.getElementById('reel1'),
+                document.getElementById('reel2'),
+                document.getElementById('reel3'),
+                document.getElementById('reel4'),
+                document.getElementById('reel5'),
+                document.getElementById('reel6'),
+                document.getElementById('reel7'),
+                document.getElementById('reel8'),
+                document.getElementById('reel9')
+            ];
+
+            const spinButton = document.getElementById('spin-button');
+            const addMoneyButton = document.getElementById('add-money-button');
+            const resultMessage = document.getElementById('result-message');
+            const moneyCounter = document.getElementById('money-counter');
+            const betSelect = document.getElementById('bet');
+            const winCounter = document.getElementById('win-counter'); 
+
+            const basePayouts = {
+                'X': 15,
+                '🍒🍋🍇🍊': 120, 
+                'BAR': 180,
+                '⭐': 600, 
+                '7️⃣': 2250 
+            };
+
+            const symbols = [
+                { icon: '🍒', points: basePayouts['🍒🍋🍇🍊'] },
+                { icon: '🍋', points: basePayouts['🍒🍋🍇🍊'] },
+                { icon: '🍇', points: basePayouts['🍒🍋🍇🍊'] },
+                { icon: '🍊', points: basePayouts['🍒🍋🍇🍊'] },
+                { icon: 'BAR', points: basePayouts['BAR'] },
+                { icon: '⭐', points: basePayouts['⭐'] },
+                { icon: '7️⃣', points: basePayouts['7️⃣'] },
+                { icon: 'X', points: basePayouts['X'] }
+            ];
+
+            let balance = 100;
+
+            function updateMoneyCounter() {
+                moneyCounter.textContent = balance.toFixed(2);
+            }
+
+            function adjustForRTP(results, rtp) {
+                const winChance = rtp / 100;
+                if (Math.random() <= winChance) {
+                    const winSymbol = symbols[Math.floor(Math.random() * symbols.length)];
+                    const winningLine = [0, 1, 2]; 
+                    winningLine.forEach(index => {
+                        results[index] = winSymbol;
+                    });
+                } else {
+                    results.forEach((_, index) => {
+                        const randomSymbol = symbols[Math.floor(Math.random() * symbols.length)];
+                        results[index] = randomSymbol;
+                    });
+                }
+                return results;
+            }
+
+            function spinReels() {
+                let results = Array(reels.length).fill(null);
+                results = adjustForRTP(results, 95.17);
+
+                reels.forEach((reel, index) => {
+                    reel.textContent = results[index].icon;
+                });
+
+                return results;
+            }
+
+            function calculatePayout(bet, basePayout) {
+                return (basePayout / 15) * bet;
+            }
+
+            function checkWin(results) {
+                const winLines = [
+                    [0, 1, 2],
+                    [3, 4, 5],
+                    [6, 7, 8],
+                    [0, 4, 8],
+                    [2, 4, 6]
+                ];
+
+                const bet = parseInt(betSelect.value);
+                let winAmount = 0;
+                let winningSymbols = [];
+
+                winLines.forEach(line => {
+                    const [a, b, c] = line;
+                    if (results[a].icon === results[b].icon && results[b].icon === results[c].icon) {
+                        const payout = calculatePayout(bet, results[a].points);
+                        winAmount += payout;
+                        winningSymbols.push(reels[a], reels[b], reels[c]);
+                    }
+                });
+
+                return { winAmount, winningSymbols };
+            }
+
+            function animateReels() {
+                const tl = gsap.timeline(); 
+                reels.forEach((reel, index) => {
+                    tl.to(reel, {
+                        y: -100, 
+                        duration: 0.1, 
+                        repeat: 10, 
+                        ease: "none",
+                        onRepeat: () => {
+                            const randomSymbol = symbols[Math.floor(Math.random() * symbols.length)];
+                            reel.textContent = randomSymbol.icon;
+                        },
+                        onComplete: () => {
+                            const finalSymbol = symbols[Math.floor(Math.random() * symbols.length)];
+                            reel.textContent = finalSymbol.icon;
+                            gsap.set(reel, { y: 0 });
+                        }
+                    }, index * 0.1);
+                });
+                return tl;
+            }
+
+            function animateWinningSymbols(winningSymbols) {
+                winningSymbols.forEach(symbol => {
+                    gsap.to(symbol, { 
+                        scale: 1.5, 
+                        repeat: 3, 
+                        yoyo: true, 
+                        duration: 0.3,
+                        backgroundColor: "#ff4500"
+                    });
+                });
+            }
+
+            spinButton.addEventListener('click', () => {
+                const bet = parseInt(betSelect.value);
+                const totalBet = bet;
+
+                reels.forEach(reel => gsap.set(reel, { scale: 1, backgroundColor: "#333" }));
+                winCounter.style.display = 'none';
+
+                if (balance >= totalBet) {
+                    balance -= totalBet;
+                    updateMoneyCounter();
+
+                    animateReels().then(() => {
+                        const results = spinReels();
+                        const { winAmount, winningSymbols } = checkWin(results);
+
+                        if (winAmount > 0) {
+                            balance += winAmount;
+                            resultMessage.textContent = `Wygrałeś ${winAmount.toFixed(2)} PLN!`;
+                            winCounter.textContent = `Wygrana: ${winAmount.toFixed(2)} PLN`;
+                            winCounter.style.display = 'block';
+                            animateWinningSymbols(winningSymbols);
+                        } else {
+                            resultMessage.textContent = "Brak wygranej, spróbuj ponownie!";
+                        }
+
+                        updateMoneyCounter();
+                    });
+                } else {
+                    resultMessage.textContent = "Brak wystarczających środków!";
+                }
+            });
+
+            addMoneyButton.addEventListener('click', () => {
+                balance += 10;
+                updateMoneyCounter();
+            });
+
+            updateMoneyCounter();
+        });
+    </script>
 </body>
 </html>
