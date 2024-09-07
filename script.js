@@ -17,28 +17,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const moneyCounter = document.getElementById('money-counter');
     const linesSelect = document.getElementById('lines');
     const betSelect = document.getElementById('bet');
-    const creditPriceSelect = document.getElementById('credit-price');
-    const totalBetDisplay = document.getElementById('total-bet');
-
-    const symbols = [
-        { icon: '🍒', points: 3.20 },
-        { icon: '🍋', points: 3.20 },
-        { icon: '🍇', points: 3.20 },
-        { icon: '⭐', points: 16.00 },
-        { icon: '7️⃣', points: 60.00 },
-        { icon: '🍊', points: 3.20 },
-        { icon: '❌', points: 0.40 },
-        { icon: '🍉', points: 4.80 }
-    ];
+    
+    // Ustawienie stałej wartości żetonu
+    const creditPrice = 1; // Stała wartość żetonu wynosi 1 PLN
 
     let balance = 100;
 
     function updateMoneyCounter() {
-        moneyCounter.textContent = (balance * parseFloat(creditPriceSelect.value)).toFixed(2);
+        moneyCounter.textContent = (balance * creditPrice).toFixed(2); // Zawsze 1 PLN
     }
 
     function updateTotalBet() {
-        const totalBet = betSelect.value * linesSelect.value * creditPriceSelect.value;
+        const totalBet = betSelect.value * linesSelect.value * creditPrice; // Zawsze 1 PLN za żeton
         totalBetDisplay.textContent = totalBet.toFixed(2);
     }
 
@@ -110,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
     spinButton.addEventListener('click', () => {
         const bet = parseInt(betSelect.value);
         const lines = parseInt(linesSelect.value);
-        const totalBet = bet * lines;
+        const totalBet = bet * lines * creditPrice; // Zawsze 1 PLN za żeton
 
         // Resetujemy animację zwycięskich symboli
         reels.forEach(reel => gsap.set(reel, { scale: 1, backgroundColor: "#333" }));
@@ -146,7 +136,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     linesSelect.addEventListener('change', updateTotalBet);
     betSelect.addEventListener('change', updateTotalBet);
-    creditPriceSelect.addEventListener('change', updateTotalBet);
 
     updateMoneyCounter();
     updateTotalBet();
