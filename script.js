@@ -20,15 +20,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const creditPriceSelect = document.getElementById('credit-price');
     const totalBetDisplay = document.getElementById('total-bet');
 
-    // Nowe symbole
+    // Zaktualizowane symbole z punktami
     const symbols = [
-        { icon: '🍒', points: 0.40 }, // Wiśnie
+        { icon: '🍒', points: 3.20 }, // Wiśnie
         { icon: '🍋', points: 3.20 }, // Cytryny
         { icon: '🍇', points: 3.20 }, // Winogrona
         { icon: '⭐', points: 16.00 }, // Gwiazdki
         { icon: '7️⃣', points: 60.00 }, // Siódemki
         { icon: '🍊', points: 3.20 }, // Pomarańcze
-        { icon: '🍉', points: 4.80 }  // Arbuz
+        { icon: '❌', points: 0.40 },  // X
+        { icon: '🍉', points: 4.80 }   // BAR (Arbuz)
     ];
 
     let balance = 100;
