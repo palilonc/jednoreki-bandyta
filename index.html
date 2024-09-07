@@ -79,12 +79,10 @@
     </div>
 
     <div class="controls">
-        <label for="bet">Zakład na linię:</label>
+        <label for="bet">Zakład za obrót (5 linii):</label>
         <select id="bet">
-            <!-- Zakład w złotówkach -->
-            <option value="1">1 zł</option>
+            <!-- Zakład za cały obrót w złotówkach -->
             <option value="5">5 zł</option>
-            <option value="10">10 zł</option>
             <option value="15" selected>15 zł</option>
             <option value="20">20 zł</option>
             <option value="50">50 zł</option>
@@ -94,7 +92,7 @@
         <button id="add-money-button">Dodaj kredyty</button>
         <button id="spin-button">Spin</button>
         <p>Saldo: <span id="money-counter">100</span> PLN</p>
-        <p>Zakład całkowity: <span id="total-bet">1</span> PLN</p>
+        <p>Zakład całkowity: <span id="total-bet">15</span> PLN</p>
         <p id="result-message"></p>
     </div>
 </body>
