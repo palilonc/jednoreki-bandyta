@@ -13,22 +13,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const spinButton = document.getElementById('spin-button');
     const resultMessage = document.getElementById('result-message');
-    let apiKey = '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'; // Zmienna na klucz API
+    const chatMessage = document.getElementById('chat-message');
+    const responseElement = document.getElementById('response');
+    const apiKey = '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'; // Wstaw swój klucz API OpenAI tutaj
 
-    // Wprowadzenie klucza API OpenAI
-    document.getElementById('save-api-key').addEventListener('click', () => {
-        apiKey = document.getElementById('api-key').value;
-        alert('Klucz API zapisany!');
-    });
-
-    // Wysyłanie wiadomości do ChatGPT
+    // Funkcja do wysyłania wiadomości do ChatGPT
     document.getElementById('send-message').addEventListener('click', async () => {
-        const message = document.getElementById('chat-message').value;
-
-        if (!apiKey) {
-            alert('Wprowadź klucz API.');
-            return;
-        }
+        const message = chatMessage.value;
 
         if (!message) {
             alert('Wprowadź wiadomość.');
@@ -50,14 +41,14 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             const data = await response.json();
-            document.getElementById('response').textContent = data.choices[0].text;
+            responseElement.textContent = data.choices[0].text;
         } catch (error) {
             console.error('Błąd:', error);
             alert('Wystąpił problem z wysyłaniem wiadomości.');
         }
     });
 
-    // Obsługa maszyny slotowej
+    // Funkcja do losowania symboli w maszynie slotowej
     function spinReels() {
         const symbols = ['🍒', '🍋', '🍇', '🍊', 'BAR', '⭐', '7️⃣', 'X'];
         reels.forEach((reel) => {
@@ -66,6 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Obsługa przycisku Spin
     spinButton.addEventListener('click', () => {
         spinReels();
     });
