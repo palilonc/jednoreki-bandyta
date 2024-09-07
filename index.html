@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Always Hot Deluxe - OpenAI Integration</title>
+    <title>Always Hot Deluxe - OpenAI Chat</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
     <script src="script.js"></script>
@@ -25,7 +25,7 @@
             margin-top: 20px;
         }
 
-        .controls input, .controls button {
+        .controls input, .controls button, .controls textarea {
             margin-left: 5px;
         }
 
@@ -56,10 +56,25 @@
             border: 2px solid #ffa500;
             margin: 0 5px;
         }
+
+        textarea {
+            width: 100%;
+            height: 100px;
+        }
+
+        .response-area {
+            width: 100%;
+            background-color: #222;
+            padding: 10px;
+            border-radius: 5px;
+            color: #fff;
+            min-height: 100px;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
-    <h1>Always Hot Deluxe - 3x3</h1>
+    <h1>Always Hot Deluxe - 3x3 z ChatGPT</h1>
 
     <div class="slot-machine-container">
         <div class="slot-machine">
@@ -82,31 +97,25 @@
     </div>
 
     <div class="controls">
-        <label for="bet">Zakład za obrót (5 linii):</label>
-        <select id="bet">
-            <option value="5">5 zł</option>
-            <option value="15" selected>15 zł</option>
-            <option value="20">20 zł</option>
-            <option value="50">50 zł</option>
-            <option value="100">100 zł</option>
-        </select>
-        <button id="add-money-button">Dodaj kredyty</button>
-        <button id="spin-button">Spin</button>
-        <p>Saldo: <span id="money-counter">100</span> PLN</p>
-        <p id="result-message"></p>
-    </div>
-
-    <div class="controls">
         <label for="api-key">Podaj klucz API OpenAI:</label>
         <input type="text" id="api-key" placeholder="Wprowadź swój klucz API">
         <button id="save-api-key">Zapisz klucz API</button>
-
-        <label for="query">Twoje zapytanie do OpenAI:</label>
-        <input type="text" id="query" placeholder="Wprowadź zapytanie">
-        <button id="send-query">Wyślij zapytanie</button>
     </div>
 
-    <p id="response"></p>
+    <div class="controls">
+        <label for="chat-message">Wpisz wiadomość do ChatGPT:</label>
+        <textarea id="chat-message" placeholder="Napisz swoją wiadomość..."></textarea>
+        <button id="send-message">Wyślij do ChatGPT</button>
+    </div>
+
+    <div class="response-area" id="response-area">
+        <strong>Odpowiedź ChatGPT:</strong>
+        <p id="response"></p>
+    </div>
+
+    <div class="controls">
+        <button id="spin-button">Spin</button>
+    </div>
 
 </body>
 </html>
