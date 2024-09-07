@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateTotalBet() {
         const bet = parseInt(betSelect.value); // Aktualny zakład za cały obrót
-        totalBetDisplay.textContent = bet.toFixed(2);
+        totalBetDisplay.textContent = bet.toFixed(2); // Całkowity zakład = zakład za obrót
     }
 
     function spinReels() {
