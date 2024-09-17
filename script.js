@@ -1,170 +1,75 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const reels = [
-        document.getElementById('reel1'),
-        document.getElementById('reel2'),
-        document.getElementById('reel3'),
-        document.getElementById('reel4'),
-        document.getElementById('reel5'),
-        document.getElementById('reel6'),
-        document.getElementById('reel7'),
-        document.getElementById('reel8'),
-        document.getElementById('reel9')
-    ];
-
-    const spinButton = document.getElementById('spin-button');
-    const addMoneyButton = document.getElementById('add-money-button');
-    const resultMessage = document.getElementById('result-message');
-    const moneyCounter = document.getElementById('money-counter');
-    const betSelect = document.getElementById('bet');
-    const winCounter = document.getElementById('win-counter'); // Dodajemy licznik wygranej
+    const blackjackBalanceDisplay = document.getElementById('blackjack-balance');
+    const blackjackStatus = document.getElementById('blackjack-status');
+    const blackjackHandDisplay = document.getElementById('blackjack-hand');
+    const blackjackResultMessage = document.getElementById('blackjack-result-message');
+    const hitButton = document.getElementById('hit-button');
+    const standButton = document.getElementById('stand-button');
     
-    // Tabela płatności przy zakładzie 15 zł (za cały obrót)
-    const basePayouts = {
-        'X': 15,
-        '🍒🍋🍇🍊': 120, // Cytryny / Wiśnie / Śliwki / Pomarańcze
-        'BAR': 180,
-        '⭐': 600, // Gwiazdy
-        '7️⃣': 2250 // Siódemki
-    };
+    let blackjackBalance = 100;
+    let blackjackHand = [];
+    let blackjackStand = false;
 
-    const symbols = [
-        { icon: '🍒', points: basePayouts['🍒🍋🍇🍊'] },
-        { icon: '🍋', points: basePayouts['🍒🍋🍇🍊'] },
-        { icon: '🍇', points: basePayouts['🍒🍋🍇🍊'] },
-        { icon: '🍊', points: basePayouts['🍒🍋🍇🍊'] },
-        { icon: 'BAR', points: basePayouts['BAR'] },
-        { icon: '⭐', points: basePayouts['⭐'] },
-        { icon: '7️⃣', points: basePayouts['7️⃣'] },
-        { icon: 'X', points: basePayouts['X'] }
-    ];
-
-    let balance = 100;
-
-    function updateMoneyCounter() {
-        moneyCounter.textContent = balance.toFixed(2); // Wyświetla saldo w złotówkach
+    function updateBlackjackBalance() {
+        blackjackBalanceDisplay.textContent = blackjackBalance.toFixed(2);
     }
 
-    function spinReels() {
-        const results = [];
-        reels.forEach((reel) => {
-            const randomSymbol = symbols[Math.floor(Math.random() * symbols.length)];
-            reel.textContent = randomSymbol.icon; // Wyświetlamy odpowiednie ikony
-            results.push(randomSymbol);
-        });
-        return results;
+    function getRandomCard() {
+        const cards = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11]; // 11 to as
+        return cards[Math.floor(Math.random() * cards.length)];
     }
 
-    function calculatePayout(bet, basePayout) {
-        // Proporcjonalna wygrana na podstawie zakładu (cały obrót)
-        return (basePayout / 15) * bet; // Tabela odnosi się do zakładu 15 zł
-    }
+    function calculateHandValue(hand) {
+        let total = 0;
+        let aces = 0;
 
-    function checkWin(results) {
-        const winLines = [
-            [0, 1, 2], // Pierwszy rząd
-            [3, 4, 5], // Drugi rząd
-            [6, 7, 8], // Trzeci rząd
-            [0, 4, 8], // Diagonalne od lewej do prawej
-            [2, 4, 6]  // Diagonalne od prawej do lewej
-        ];
-
-        const bet = parseInt(betSelect.value); // Pobieramy aktualny zakład za obrót
-        let winAmount = 0;
-        let winningSymbols = [];
-
-        winLines.forEach(line => {
-            const [a, b, c] = line;
-            if (results[a].icon === results[b].icon && results[b].icon === results[c].icon) {
-                // Obliczamy wygraną na podstawie symbolu i zakładu
-                const payout = calculatePayout(bet, results[a].points);
-                winAmount += payout;
-                winningSymbols.push(reels[a], reels[b], reels[c]);
+        hand.forEach(card => {
+            total += card;
+            if (card === 11) {
+                aces += 1;
             }
         });
 
-        return { winAmount, winningSymbols };
-    }
-
-    function animateReels() {
-        const tl = gsap.timeline(); // Używamy GSAP do animacji
-        reels.forEach((reel, index) => {
-            tl.to(reel, {
-                y: -100, // Przesuwamy symbol w górę
-                duration: 0.1, 
-                repeat: 10, // Obraca się 10 razy
-                ease: "none", // Bez płynnych przejść, równa prędkość
-                onRepeat: () => {
-                    // Losujemy i przypisujemy nowy symbol do każdego obrotu
-                    const randomSymbol = symbols[Math.floor(Math.random() * symbols.length)];
-                    reel.textContent = randomSymbol.icon;
-                },
-                onComplete: () => {
-                    // Ostatecznie ustawiamy symbol po zakończeniu obrotu
-                    const finalSymbol = symbols[Math.floor(Math.random() * symbols.length)];
-                    reel.textContent = finalSymbol.icon;
-                    gsap.set(reel, { y: 0 }); // Resetujemy pozycję do początkowej
-                }
-            }, index * 0.1); // Dodajemy opóźnienie między obrotami kolejnych bębnów
-        });
-        return tl;
-    }
-
-    function animateWinningSymbols(winningSymbols) {
-        winningSymbols.forEach(symbol => {
-            gsap.to(symbol, { 
-                scale: 1.5, 
-                repeat: 3, 
-                yoyo: true, 
-                duration: 0.3,
-                backgroundColor: "#ff4500"
-            });
-        });
-    }
-
-    spinButton.addEventListener('click', () => {
-        const bet = parseInt(betSelect.value); // Zakład za obrót
-        const totalBet = bet; // Całkowity zakład = zakład za obrót
-
-        // Resetujemy animację zwycięskich symboli
-        reels.forEach(reel => gsap.set(reel, { scale: 1, backgroundColor: "#333" }));
-        winCounter.style.display = 'none'; // Ukrywamy licznik wygranej przed obrotem
-
-        if (balance >= totalBet) {
-            balance -= totalBet;
-            updateMoneyCounter();
-
-            // Obracamy bębny
-            animateReels().then(() => {
-                // Po zakończeniu animacji obrotu, sprawdzamy wynik
-                const results = spinReels();
-                const { winAmount, winningSymbols } = checkWin(results);
-
-                // Jeśli jest wygrana, dodajemy kwotę i animujemy zwycięskie symbole
-                if (winAmount > 0) {
-                    balance += winAmount;
-                    resultMessage.textContent = `Wygrałeś ${winAmount.toFixed(2)} PLN!`;
-                    winCounter.textContent = `Wygrana: ${winAmount.toFixed(2)} PLN`; // Wyświetlamy wygraną
-                    winCounter.style.display = 'block'; // Pokazujemy licznik wygranej
-                    animateWinningSymbols(winningSymbols);
-                } else {
-                    resultMessage.textContent = "Brak wygranej, spróbuj ponownie!";
-                }
-
-                updateMoneyCounter();
-            });
-        } else {
-            resultMessage.textContent = "Brak wystarczających środków!";
+        // Jeśli przekroczymy 21, liczymy asy jako 1
+        while (total > 21 && aces > 0) {
+            total -= 10;
+            aces -= 1;
         }
+
+        return total;
+    }
+
+    function updateBlackjackHand() {
+        blackjackHandDisplay.textContent = `Twoje karty: ${blackjackHand.join(', ')}`;
+    }
+
+    function checkBlackjackResult() {
+        const handValue = calculateHandValue(blackjackHand);
+
+        if (handValue === 21) {
+            blackjackBalance += 20;
+            blackjackResultMessage.textContent = 'Masz 21! Wygrałeś 20 PLN!';
+        } else if (handValue > 21) {
+            blackjackBalance -= 10;
+            blackjackResultMessage.textContent = 'Przekroczyłeś 21! Przegrywasz 10 PLN.';
+        } else if (blackjackStand && handValue < 21) {
+            blackjackResultMessage.textContent = `Zakończono z wynikiem ${handValue}.`;
+        }
+
+        updateBlackjackBalance();
+    }
+
+    hitButton.addEventListener('click', () => {
+        const newCard = getRandomCard();
+        blackjackHand.push(newCard);
+        updateBlackjackHand();
+        checkBlackjackResult();
     });
 
-    addMoneyButton.addEventListener('click', () => {
-        balance += 10;
-        updateMoneyCounter();
+    standButton.addEventListener('click', () => {
+        blackjackStand = true;
+        checkBlackjackResult();
     });
 
-    betSelect.addEventListener('change', () => {
-        // Aktualizacja zakładu po zmianie wyboru zakładu
-    });
-
-    updateMoneyCounter();
+    updateBlackjackBalance();
 });
