@@ -3,16 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ice Tower</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Prosta Gra - Ruchome Kwadraty</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            background-color: #f0f8ff;
+        }
+        canvas {
+            border: 2px solid #4682b4;
+            background-color: #e0ffff;
+            display: block;
+            margin: 20px auto;
+        }
+    </style>
 </head>
 <body>
-    <h1>Ice Tower</h1>
-    <div id="game-container">
-        <div id="tower"></div>
-    </div>
-    <button id="build-button">Zbuduj Wieżę</button>
-    <p id="score">Wysokość wieży: 0</p>
+    <h1>Prosta Gra - Ruchome Kwadraty</h1>
+    <canvas id="gameCanvas" width="600" height="400"></canvas>
     <script src="script.js"></script>
 </body>
 </html>
