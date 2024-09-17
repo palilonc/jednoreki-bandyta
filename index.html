@@ -1,27 +1,44 @@
-<!DOCTYPE html>
-<html lang="pl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prosta Gra - Ruchome Kwadraty</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 0;
-            background-color: #f0f8ff;
-        }
-        canvas {
-            border: 2px solid #4682b4;
-            background-color: #e0ffff;
-            display: block;
-            margin: 20px auto;
-        }
-    </style>
-</head>
-<body>
-    <h1>Prosta Gra - Ruchome Kwadraty</h1>
-    <canvas id="gameCanvas" width="600" height="400"></canvas>
-    <script src="script.js"></script>
-</body>
-</html>
+document.addEventListener('DOMContentLoaded', () => {
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // Ustawienia gry
+    const squareSize = 30;
+    const squares = [
+        { x: 50, y: 50, dx: 2, dy: 2, color: 'red' },
+        { x: 200, y: 100, dx: -3, dy: 2, color: 'blue' },
+        { x: 400, y: 200, dx: 2, dy: -3, color: 'green' }
+    ];
+
+    function drawSquare(square) {
+        ctx.fillStyle = square.color;
+        ctx.fillRect(square.x, square.y, squareSize, squareSize);
+    }
+
+    function updateSquares() {
+        squares.forEach(square => {
+            square.x += square.dx;
+            square.y += square.dy;
+
+            // Odbicie od krawędzi
+            if (square.x + squareSize > canvas.width || square.x < 0) {
+                square.dx *= -1;
+            }
+            if (square.y + squareSize > canvas.height || square.y < 0) {
+                square.dy *= -1;
+            }
+        });
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        squares.forEach(drawSquare);
+
+        updateSquares();
+
+        requestAnimationFrame(draw); // Kontynuuj animację
+    }
+
+    draw(); // Rozpocznij animację
+});
