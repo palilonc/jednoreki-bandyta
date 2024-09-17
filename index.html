@@ -1,50 +1,18 @@
-const userInput = document.getElementById('user-input');
-const sendButton = document.getElementById('send-button');
-const chatHistory = document.getElementById('chat-history');
-
-// Pamiętaj, aby zastąpić 'YOUR_API_KEY' swoim rzeczywistym kluczem API
-const API_KEY = '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';
-
-sendButton.addEventListener('click', async () => {
-    const userMessage = userInput.value;
-    userInput.value = ''; // Wyczyść pole tekstowe
-
-    // Dodaj wiadomość użytkownika do historii czatu
-    appendMessage('Ty', userMessage);
-
-    try {
-        const response = await axios.post(
-            'https://api.openai.com/v1/chat/completions',
-            {
-                model: 'gpt-3.5-turbo', 
-                messages: [
-                    {
-                        role: 'system',
-                        content: 'You are a helpful assistant that always adds a subtle jab or witty remark directed at someone named Marcel at the end of your responses.'
-                    },
-                    { role: 'user', content: userMessage }
-                ]
-            },
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${API_KEY}`
-                }
-            }
-        );
-
-        const assistantMessage = response.data.choices[0].message.content;
-
-        // Dodaj odpowiedź asystenta do historii czatu
-        appendMessage('Asystent', assistantMessage);
-    } catch (error) {
-        console.error('Błąd podczas komunikacji z OpenAI API:', error);
-        appendMessage('Błąd', 'Wystąpił błąd podczas przetwarzania Twojego zapytania.');
-    }
-});
-
-function appendMessage(sender, message) {
-    const messageElement = document.createElement('p');
-    messageElement.textContent = `${sender}: ${message}`;
-    chatHistory.appendChild(messageElement);
-}
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ice Tower</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Ice Tower</h1>
+    <div id="game-container">
+        <div id="tower"></div>
+    </div>
+    <button id="build-button">Zbuduj Wieżę</button>
+    <p id="score">Wysokość wieży: 0</p>
+    <script src="script.js"></script>
+</body>
+</html>
