@@ -1,43 +1,47 @@
-document.addEventListener('DOMContentLoaded', () => {
-    // Blackjack elements (połączone z HTML)
-    const blackjackBalanceDisplay = document.getElementById('blackjack-balance');
-    const blackjackHandDisplay = document.getElementById('blackjack-hand');
-    const dealerHandDisplay = document.getElementById('dealer-hand');
-    const blackjackResultMessage = document.getElementById('blackjack-result-message');
-    const hitButton = document.getElementById('hit-button');
-    const standButton = document.getElementById('stand-button');
-    const newGameButton = document.getElementById('new-game-button'); // Dodany przycisk nowej gry
+const userInput = document.getElementById('user-input');
+const sendButton = document.getElementById('send-button');
+const chatHistory = document.getElementById('chat-history');
 
-    let blackjackBalance = 100;
-    let playerHand = [];
-    let dealerHand = [];
-    let blackjackStand = false;
+// **Pamiętaj, aby zastąpić 'YOUR_API_KEY' swoim rzeczywistym kluczem API** 
+const API_KEY = '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'; 
 
-    // ... (reszta funkcji pozostaje bez zmian)
+sendButton.addEventListener('click', async () => {
+    const userMessage = userInput.value;
+    userInput.value = ''; // Wyczyść pole tekstowe
 
-    function dealerTurn() {
-        let dealerHandValue = calculateHandValue(dealerHand);
+    // Dodaj wiadomość użytkownika do historii czatu
+    appendMessage('Ty', userMessage);
 
-        // Krupier dobiera karty, dopóki jego wynik nie będzie wynosił co najmniej 17
-        while (dealerHandValue < 17) {
-            const newCard = getRandomCard();
-            dealerHand.push(newCard);
-            dealerHandValue = calculateHandValue(dealerHand);
-        }
+    try {
+        const response = await axios.post(
+            'https://api.openai.com/v1/chat/completions',
+            {
+                model: 'gpt-3.5-turbo', // Możesz zmienić na inny model, jeśli chcesz
+                messages: [
+                    { role: 'system', content: 'You are a helpful assistant.' }, // Instrukcja systemowa
+                    { role: 'user', content: userMessage }
+                ]
+            },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${API_KEY}`
+                }
+            }
+        );
 
-        updateDealerHand(true); // Pokaż ukrytą kartę
-        checkBlackjackResult();
+        const assistantMessage = response.data.choices[0].message.content;
+
+        // Dodaj odpowiedź asystenta do historii czatu
+        appendMessage('Asystent', assistantMessage);
+    } catch (error) {
+        console.error('Błąd podczas komunikacji z OpenAI API:', error);
+        appendMessage('Błąd', 'Wystąpił błąd podczas przetwarzania Twojego zapytania.');
     }
-
-    function startNewGame() {
-        // ... (logika rozpoczynania nowej gry bez zmian)
-    }
-
-    // Event listener dla przycisku "Nowa Gra"
-    newGameButton.addEventListener('click', () => {
-        startNewGame();
-    });
-
-    // Rozpocznij pierwszą grę
-    startNewGame();
 });
+
+function appendMessage(sender, message) {
+    const messageElement = document.createElement('p');
+    messageElement.textContent = `${sender}: ${message}`;
+    chatHistory.appendChild(messageElement);
+}
