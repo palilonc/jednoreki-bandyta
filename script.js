@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     // Blackjack elements
     const blackjackBalanceDisplay = document.getElementById('blackjack-balance');
-    const blackjackStatus = document.getElementById('blackjack-status');
     const blackjackHandDisplay = document.getElementById('blackjack-hand');
     const blackjackResultMessage = document.getElementById('blackjack-result-message');
     const hitButton = document.getElementById('hit-button');
