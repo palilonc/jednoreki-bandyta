@@ -1,153 +1,24 @@
 <!DOCTYPE html>
-<html lang="pl">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Always Hot Deluxe - 3x3 & Gra w Oczko</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
-    <style>
-        /* Style dla slotów i gry w oczko */
-        .container {
-            display: flex;
-            justify-content: space-around;
-            align-items: flex-start;
-            margin-top: 20px;
-        }
-
-        /* Style maszyny slotowej */
-        .slot-machine-container, .blackjack-container {
-            width: 45%;
-        }
-
-        .slot-machine {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .row {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 10px;
-        }
-
-        .reel {
-            font-size: 2em;
-            margin: 0 10px;
-            width: 60px;
-            height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 2px solid #ffa500;
-            background-color: #333;
-            color: #ffa500;
-        }
-
-        h1 {
-            color: orange;
-        }
-
-        body {
-            background-color: #333;
-            color: #ffa500;
-            text-align: center;
-        }
-
-        .controls {
-            margin-top: 20px;
-        }
-
-        .controls select, .controls button {
-            margin-left: 5px;
-        }
-
-        .win {
-            background-color: #ff4500;
-        }
-
-        /* Style gry w Oczko */
-        .blackjack-container {
-            background-color: rgba(34, 34, 34, 0.8);
-            padding: 20px;
-            border-radius: 10px;
-            color: white;
-            text-align: left;
-        }
-
-        .card {
-            font-size: 2em;
-            margin: 5px;
-        }
-
-        .blackjack-controls {
-            margin-top: 20px;
-        }
-
-        .blackjack-hand {
-            font-size: 1.5em;
-            margin: 10px 0;
-        }
-    </style>
-</head>
+    <title>Blackjack</title>
+    <link rel="stylesheet" href="style.css"> </head>
 <body>
-    <h1>Always Hot Deluxe & Gra w Oczko</h1>
+    <h1>Blackjack</h1>
 
-    <div class="container">
-        <!-- Sekcja maszyny slotowej -->
-        <div class="slot-machine-container">
-            <div class="slot-machine">
-                <div class="row" id="row1">
-                    <div class="reel" id="reel1">🍒</div>
-                    <div class="reel" id="reel2">🍋</div>
-                    <div class="reel" id="reel3">🍇</div>
-                </div>
-                <div class="row" id="row2">
-                    <div class="reel" id="reel4">🍊</div>
-                    <div class="reel" id="reel5">BAR</div>
-                    <div class="reel" id="reel6">⭐</div>
-                </div>
-                <div class="row" id="row3">
-                    <div class="reel" id="reel7">7️⃣</div>
-                    <div class="reel" id="reel8">🍒</div>
-                    <div class="reel" id="reel9">X</div>
-                </div>
-            </div>
+    <p>Saldo: <span id="blackjack-balance">100.00</span> PLN</p>
 
-            <div class="controls">
-                <label for="bet">Zakład za obrót (5 linii):</label>
-                <select id="bet">
-                    <option value="5">5 zł</option>
-                    <option value="15" selected>15 zł</option>
-                    <option value="20">20 zł</option>
-                    <option value="50">50 zł</option>
-                    <option value="100">100 zł</option>
-                </select>
+    <h2>Twoja ręka</h2>
+    <p id="blackjack-hand"></p>
 
-                <button id="add-money-button">Dodaj kredyty</button>
-                <button id="spin-button">Spin</button>
-                <p>Saldo: <span id="money-counter">100</span> PLN</p>
-                <p id="result-message"></p>
-            </div>
-        </div>
+    <h2>Ręka krupiera</h2>
+    <p id="dealer-hand"></p>
 
-        <!-- Sekcja gry w Oczko -->
-        <div class="blackjack-container">
-            <h2>Gra w Oczko</h2>
-            <div id="blackjack-status"></div>
-            <div id="blackjack-hand" class="blackjack-hand">Twoje karty: </div>
-            <div id="dealer-hand" class="blackjack-hand">Karty przeciwnika: </div>
+    <p id="blackjack-result-message"></p>
 
-            <div class="blackjack-controls">
-                <button id="hit-button">Dobierz kartę</button>
-                <button id="stand-button">Pass</button>
-                <p>Saldo w Oczko: <span id="blackjack-balance">100</span> PLN</p>
-                <p id="blackjack-result-message"></p>
-            </div>
-        </div>
-    </div>
+    <button id="hit-button">Dobierz</button>
+    <button id="stand-button">Pas</button>
+    <button id="new-game-button">Nowa Gra</button> 
 
-    <script src="script.js"></script>
-</body>
+    <script src="script.js"></script> </body>
 </html>
