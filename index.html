@@ -1,24 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Blackjack</title>
-    <link rel="stylesheet" href="style.css"> </head>
+    <title>Chat z OpenAI</title>
+</head>
 <body>
-    <h1>Blackjack</h1>
+    <textarea id="user-input" placeholder="Wpisz swoją wiadomość..."></textarea>
+    <button id="send-button">Wyślij</button>
+    <div id="chat-history"></div>
 
-    <p>Saldo: <span id="blackjack-balance">100.00</span> PLN</p>
-
-    <h2>Twoja ręka</h2>
-    <p id="blackjack-hand"></p>
-
-    <h2>Ręka krupiera</h2>
-    <p id="dealer-hand"></p>
-
-    <p id="blackjack-result-message"></p>
-
-    <button id="hit-button">Dobierz</button>
-    <button id="stand-button">Pas</button>
-    <button id="new-game-button">Nowa Gra</button> 
-
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> 
     <script src="script.js"></script> </body>
 </html>
