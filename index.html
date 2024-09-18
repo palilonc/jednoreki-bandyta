@@ -1,44 +1,50 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const canvas = document.getElementById('gameCanvas');
-    const ctx = canvas.getContext('2d');
-
-    // Ustawienia gry
-    const squareSize = 30;
-    const squares = [
-        { x: 50, y: 50, dx: 2, dy: 2, color: 'red' },
-        { x: 200, y: 100, dx: -3, dy: 2, color: 'blue' },
-        { x: 400, y: 200, dx: 2, dy: -3, color: 'green' }
-    ];
-
-    function drawSquare(square) {
-        ctx.fillStyle = square.color;
-        ctx.fillRect(square.x, square.y, squareSize, squareSize);
-    }
-
-    function updateSquares() {
-        squares.forEach(square => {
-            square.x += square.dx;
-            square.y += square.dy;
-
-            // Odbicie od krawędzi
-            if (square.x + squareSize > canvas.width || square.x < 0) {
-                square.dx *= -1;
-            }
-            if (square.y + squareSize > canvas.height || square.y < 0) {
-                square.dy *= -1;
-            }
-        });
-    }
-
-    function draw() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        squares.forEach(drawSquare);
-
-        updateSquares();
-
-        requestAnimationFrame(draw); // Kontynuuj animację
-    }
-
-    draw(); // Rozpocznij animację
-});
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edytor Produktów</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        button {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Edytor Produktów</h1>
+    <table id="productsTable">
+        <thead>
+            <tr>
+                <th>Nazwa</th>
+                <th>Opis</th>
+                <th>Cena (zł)</th>
+                <th>Akcje</th>
+            </tr>
+        </thead>
+        <tbody id="productsBody">
+            <!-- Produkty będą dodawane dynamicznie -->
+        </tbody>
+    </table>
+    <button onclick="addProduct()">Dodaj Produkt</button>
+    <button onclick="saveChanges()">Zapisz Zmiany</button>
+    <script src="script.js"></script>
+</body>
+</html>
