@@ -1,44 +1,78 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const canvas = document.getElementById('gameCanvas');
-    const ctx = canvas.getContext('2d');
+// Funkcja do wczytywania produktów z kodu funkcji
+function loadProducts() {
+    fetch('process_message_code.txt')
+        .then(response => response.text())
+        .then(text => {
+            const regex = /- \*\*(.*?)\*\*: (.*?)\. Cena (.*?) zł\./g;
+            let match;
+            const tableBody = document.getElementById('productsBody');
+            tableBody.innerHTML = ''; // Wyczyść istniejącą zawartość tabeli
 
-    // Ustawienia gry
-    const squareSize = 30;
-    const squares = [
-        { x: 50, y: 50, dx: 2, dy: 2, color: 'red' },
-        { x: 200, y: 100, dx: -3, dy: 2, color: 'blue' },
-        { x: 400, y: 200, dx: 2, dy: -3, color: 'green' }
-    ];
-
-    function drawSquare(square) {
-        ctx.fillStyle = square.color;
-        ctx.fillRect(square.x, square.y, squareSize, squareSize);
-    }
-
-    function updateSquares() {
-        squares.forEach(square => {
-            square.x += square.dx;
-            square.y += square.dy;
-
-            // Odbicie od krawędzi
-            if (square.x + squareSize > canvas.width || square.x < 0) {
-                square.dx *= -1;
-            }
-            if (square.y + squareSize > canvas.height || square.y < 0) {
-                square.dy *= -1;
+            while ((match = regex.exec(text)) !== null) {
+                const [fullMatch, name, description, price] = match;
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><input type="text" value="${name}"></td>
+                    <td><input type="text" value="${description}"></td>
+                    <td><input type="text" value="${price}"></td>
+                    <td><button onclick="removeProduct(this)">Usuń</button></td>
+                `;
+                tableBody.appendChild(row);
             }
         });
+}
+
+// Funkcja do dodawania nowego produktu
+function addProduct() {
+    const tableBody = document.getElementById('productsBody');
+    const row = document.createElement('tr');
+    row.innerHTML = `
+        <td><input type="text" value=""></td>
+        <td><input type="text" value=""></td>
+        <td><input type="text" value=""></td>
+        <td><button onclick="removeProduct(this)">Usuń</button></td>
+    `;
+    tableBody.appendChild(row);
+}
+
+// Funkcja do usuwania produktu
+function removeProduct(button) {
+    const row = button.parentElement.parentElement;
+    row.remove();
+}
+
+// Funkcja do zapisywania zmian w pliku
+function saveChanges() {
+    const tableBody = document.getElementById('productsBody');
+    const rows = tableBody.getElementsByTagName('tr');
+    let products = '';
+
+    for (const row of rows) {
+        const inputs = row.getElementsByTagName('input');
+        if (inputs.length === 3) {
+            const name = inputs[0].value;
+            const description = inputs[1].value;
+            const price = inputs[2].value;
+            if (name && description && price) {
+                products += `- **${name}**: ${description}. Cena ${price} zł.\n`;
+            }
+        }
     }
 
-    function draw() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const newContent = `### Dostępne produkty i ceny: ###\n${products}\n### Dodatkowe informacje ###`;
 
-        squares.forEach(drawSquare);
+    fetch('update_file.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ content: newContent })
+    })
+    .then(response => response.text())
+    .then(text => {
+        alert(text);
+    });
+}
 
-        updateSquares();
-
-        requestAnimationFrame(draw); // Kontynuuj animację
-    }
-
-    draw(); // Rozpocznij animację
-});
+// Wczytaj produkty przy starcie
+window.onload = loadProducts;
