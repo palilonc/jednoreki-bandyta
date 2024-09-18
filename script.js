@@ -1,78 +1,76 @@
-// Funkcja do wczytywania produktów z kodu funkcji
-function loadProducts() {
-    fetch('process_message_code.txt')
-        .then(response => response.text())
-        .then(text => {
-            const regex = /- \*\*(.*?)\*\*: (.*?)\. Cena (.*?) zł\./g;
-            let match;
-            const tableBody = document.getElementById('productsBody');
-            tableBody.innerHTML = ''; // Wyczyść istniejącą zawartość tabeli
+const ball = document.getElementById('ball');
+const leftFlipper = document.getElementById('left-flipper');
+const rightFlipper = document.getElementById('right-flipper');
+const scoreDisplay = document.getElementById('score');
 
-            while ((match = regex.exec(text)) !== null) {
-                const [fullMatch, name, description, price] = match;
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td><input type="text" value="${name}"></td>
-                    <td><input type="text" value="${description}"></td>
-                    <td><input type="text" value="${price}"></td>
-                    <td><button onclick="removeProduct(this)">Usuń</button></td>
-                `;
-                tableBody.appendChild(row);
-            }
-        });
-}
+let ballSpeedX = 2;
+let ballSpeedY = -2;
+let score = 0;
 
-// Funkcja do dodawania nowego produktu
-function addProduct() {
-    const tableBody = document.getElementById('productsBody');
-    const row = document.createElement('tr');
-    row.innerHTML = `
-        <td><input type="text" value=""></td>
-        <td><input type="text" value=""></td>
-        <td><input type="text" value=""></td>
-        <td><button onclick="removeProduct(this)">Usuń</button></td>
-    `;
-    tableBody.appendChild(row);
-}
+ball.style.left = '190px';
+ball.style.top = '580px';
 
-// Funkcja do usuwania produktu
-function removeProduct(button) {
-    const row = button.parentElement.parentElement;
-    row.remove();
-}
+function updateBallPosition() {
+    let ballRect = ball.getBoundingClientRect();
+    let gameRect = document.getElementById('game').getBoundingClientRect();
 
-// Funkcja do zapisywania zmian w pliku
-function saveChanges() {
-    const tableBody = document.getElementById('productsBody');
-    const rows = tableBody.getElementsByTagName('tr');
-    let products = '';
-
-    for (const row of rows) {
-        const inputs = row.getElementsByTagName('input');
-        if (inputs.length === 3) {
-            const name = inputs[0].value;
-            const description = inputs[1].value;
-            const price = inputs[2].value;
-            if (name && description && price) {
-                products += `- **${name}**: ${description}. Cena ${price} zł.\n`;
-            }
-        }
+    // Collision with walls
+    if (ballRect.left <= gameRect.left || ballRect.right >= gameRect.right) {
+        ballSpeedX = -ballSpeedX;
+    }
+    if (ballRect.top <= gameRect.top) {
+        ballSpeedY = -ballSpeedY;
     }
 
-    const newContent = `### Dostępne produkty i ceny: ###\n${products}\n### Dodatkowe informacje ###`;
+    // Collision with flippers
+    if (ballRect.bottom >= gameRect.bottom) {
+        if (ballRect.left < leftFlipper.getBoundingClientRect().right && 
+            ballRect.right > leftFlipper.getBoundingClientRect().left) {
+            ballSpeedY = -ballSpeedY;
+            score++;
+        }
+        if (ballRect.left < rightFlipper.getBoundingClientRect().right && 
+            ballRect.right > rightFlipper.getBoundingClientRect().left) {
+            ballSpeedY = -ballSpeedY;
+            score++;
+        }
+        resetBall();
+    }
 
-    fetch('update_file.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ content: newContent })
-    })
-    .then(response => response.text())
-    .then(text => {
-        alert(text);
-    });
+    ball.style.left = ball.offsetLeft + ballSpeedX + 'px';
+    ball.style.top = ball.offsetTop + ballSpeedY + 'px';
 }
 
-// Wczytaj produkty przy starcie
-window.onload = loadProducts;
+function resetBall() {
+    ball.style.left = '190px';
+    ball.style.top = '580px';
+    ballSpeedX = 2;
+    ballSpeedY = -2;
+}
+
+function updateScore() {
+    scoreDisplay.textContent = 'Score: ' + score;
+}
+
+setInterval(() => {
+    updateBallPosition();
+    updateScore();
+}, 20);
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'a') {
+        leftFlipper.style.transform = 'rotate(0deg)';
+    }
+    if (e.key === 'd') {
+        rightFlipper.style.transform = 'rotate(0deg)';
+    }
+});
+
+document.addEventListener('keyup', (e) => {
+    if (e.key === 'a') {
+        leftFlipper.style.transform = 'rotate(45deg)';
+    }
+    if (e.key === 'd') {
+        rightFlipper.style.transform = 'rotate(-45deg)';
+    }
+});
