@@ -3,17 +3,276 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pinball Game</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Quiz Milionerzy</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('https://github.com/palilonc/milonerzy/blob/main/w-milionerach-padlo-pytanie-za-milion-i-wygrana.jpeg?raw=true');
+            background-size: cover;
+            background-position: center;
+            margin: 0;
+            padding: 20px;
+            color: white;
+        }
+
+        #quiz-container {
+            background-color: rgba(0, 0, 0, 0.7); /* Półprzezroczyste tło */
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 800px;
+            margin: auto;
+            text-align: center;
+            color: white;
+        }
+
+        .question {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .answers button {
+            display: block;
+            font-size: 20px;
+            margin-bottom: 10px;
+            background-color: rgba(255, 255, 255, 0.2); /* Półprzezroczyste tło odpowiedzi */
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 100%;
+            border: none;
+            color: white;
+        }
+
+        .answers button:hover {
+            background-color: rgba(255, 255, 255, 0.4); /* Efekt najechania myszką */
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #result-container {
+            margin-top: 20px;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        #stake-container {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        #timer {
+            font-size: 20px;
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Pinball Game</h1>
-    <div id="game">
-        <div id="ball"></div>
-        <div class="flipper" id="left-flipper"></div>
-        <div class="flipper" id="right-flipper"></div>
-        <div id="score">Score: 0</div>
+    <div id="quiz-container">
+        <div id="question-container">
+            <div class="question"></div>
+            <div class="answers"></div>
+        </div>
+        <div id="stake-container">Stawka: 0 zł</div>
+        <div id="timer">Czas: 30</div>
+        <button id="quit-button">Rezygnuję</button>
+        <div id="result-container"></div>
     </div>
-    <script src="script.js"></script>
+
+    <audio id="background-music" src="https://github.com/palilonc/milonerzy/raw/refs/heads/main/Theme%20Contestants%20-%20Who%20Wants%20to%20Be%20a%20Millionaire_.mp3" preload="auto"></audio>
+    
+    <button id="play-music">Odtwórz muzykę</button>
+
+    <script>
+        document.getElementById('play-music').addEventListener('click', function() {
+            const music = document.getElementById('background-music');
+            music.play().catch(function(error) {
+                console.log("Błąd odtwarzania:", error);
+            });
+        });
+        
+	const questions = [
+            // Historia
+            { question: "W którym roku wybuchło powstanie warszawskie?", answers: ["1939", "1943", "1944", "1945"], correct: 2 },
+            { question: "Kto był pierwszym królem Polski?", answers: ["Mieszko I", "Bolesław Chrobry", "Kazimierz Wielki", "Władysław Jagiełło"], correct: 1 },
+            { question: "Bitwa pod Grunwaldem odbyła się w roku:", answers: ["1410", "1525", "1655", "1794"], correct: 0 },
+            { question: "Kim był Tadeusz Kościuszko?", answers: ["Królem Polski", "Naczelnikiem powstania", "Poetą romantycznym", "Malarzem"], correct: 1 },
+            { question: "W którym wieku żył Mikołaj Kopernik?", answers: ["XIV", "XV", "XVI", "XVII"], correct: 2 },
+
+            // Geografia
+            { question: "Najwyższy szczyt w Polsce to:", answers: ["Rysy", "Giewont", "Śnieżka", "Babia Góra"], correct: 0 },
+            { question: "Stolicą Niemiec jest:", answers: ["Berlin", "Monachium", "Frankfurt", "Hamburg"], correct: 0 },
+            { question: "Który kontynent jest największy?", answers: ["Afryka", "Ameryka Północna", "Azja", "Europa"], correct: 2 },
+            { question: "Na którym kontynencie leży Egipt?", answers: ["Afryka", "Azja", "Europa", "Ameryka Południowa"], correct: 0 },
+            { question: "Ile stanów ma Stany Zjednoczone?", answers: ["48", "50", "51", "52"], correct: 1 },
+
+            // Literatura
+            { question: "Autorem 'Lalki' jest:", answers: ["Henryk Sienkiewicz", "Bolesław Prus", "Eliza Orzeszkowa", "Stefan Żeromski"], correct: 1 },
+            { question: "Który poeta napisał 'Treny'?", answers: ["Adam Mickiewicz", "Jan Kochanowski", "Juliusz Słowacki", "Cyprian Kamil Norwid"], correct: 1 },
+            { question: "Głównym bohaterem 'Dziadów' jest:", answers: ["Konrad", "Gustaw", "Kordian", "Jacek Soplica"], correct: 0 },
+            { question: "Kto otrzymał literacką Nagrodę Nobla w 1996 roku?", answers: ["Wisława Szymborska", "Czesław Miłosz", "Olga Tokarczuk", "Henryk Sienkiewicz"], correct: 0 },
+            { question: "W jakim mieście rozgrywa się akcja 'Zbrodni i kary'?", answers: ["Moskwa", "Petersburg", "Kijów", "Warszawa"], correct: 1 },
+
+            // Sztuka i kultura
+            { question: "Kto namalował 'Damę z gronostajem'?", answers: ["Leonardo da Vinci", "Rembrandt", "Vincent van Gogh", "Leonardo da Vinci"], correct: 0 },
+            { question: "Kompozytorem 'Poloneza Ogińskiego' jest:", answers: ["Fryderyk Chopin", "Michał Kleofas Ogiński", "Stanisław Moniuszko", "Karol Szymanowski"], correct: 1 },
+            { question: "Reżyserem filmu 'Pianista' jest:", answers: ["Andrzej Wajda", "Krzysztof Kieślowski", "Roman Polański", "Agnieszka Holland"], correct: 2 },
+            { question: "W którym mieście znajduje się Teatr Wielki - Opera Narodowa?", answers: ["Warszawa", "Kraków", "Wrocław", "Poznań"], correct: 0 },
+            { question: "Kto jest autorem rzeźby 'Dawid'?", answers: ["Michał Anioł", "Leonardo da Vinci", "Donatello", "Rafael"], correct: 0 },
+
+            // Nauka i technologia
+            { question: "Wzór chemiczny wody to:", answers: ["H2O", "CO2", "NaCl", "O2"], correct: 0 },
+            { question: "Kto sformułował teorię względności?", answers: ["Isaac Newton", "Albert Einstein", "Galileo Galilei", "Stephen Hawking"], correct: 1 },
+            { question: "Jaka jest jednostka siły?", answers: ["Newton", "Dżul", "Wat", "Amper"], correct: 0 },
+            { question: "Kto wynalazł żarówkę?", answers: ["Thomas Edison", "Nikola Tesla", "Alexander Graham Bell", "Guglielmo Marconi"], correct: 0 },
+            { question: "Co oznacza skrót 'www'?", answers: ["World Wide Web", "Wild Wild West", "Wonderful World of Wonders", "We Will Win"], correct: 0 },
+
+            // Sport
+            { question: "Ilu zawodników liczy drużyna piłki nożnej?", answers: ["9", "10", "11", "12"], correct: 2 },
+            { question: "W którym roku Polska była gospodarzem Mistrzostw Europy w Piłce Nożnej?", answers: ["2008", "2012", "2016", "2020"], correct: 1 },
+            { question: "Kto jest rekordzistą świata w biegu na 100 metrów mężczyzn?", answers: ["Usain Bolt", "Carl Lewis", "Jesse Owens", "Tyson Gay"], correct: 0 },
+            { question: "W jakiej dyscyplinie sportu specjalizowała się Irena Szewińska?", answers: ["Lekkoatletyka", "Pływanie", "Gimnastyka", "Tenis"], correct: 0 },
+            { question: "Który klub piłkarski zdobył najwięcej tytułów mistrza Polski?", answers: ["Legia Warszawa", "Górnik Zabrze", "Ruch Chorzów", "Wisła Kraków"], correct: 0 },
+
+            // Rozrywka
+            { question: "Kto wygrał pierwszą edycję polskiej wersji programu 'Big Brother'?", answers: ["Janusz Dzięcioł", "Manuela Michalak", "Piotr Gulczyński", "Klaudiusz Ševković"], correct: 0 },
+            { question: "W którym filmie wystąpił Daniel Radcliffe jako Harry Potter?", answers: ["Harry Potter i Kamień Filozoficzny", "Władca Pierścieni: Drużyna Pierścienia", "Piraci z Karaibów: Klątwa Czarnej Perły", "Opowieści z Narnii: Lew, Czarownica i stara szafa"], correct: 0 },
+            { question: "Kto jest wokalistą zespołu Coldplay?", answers: ["Chris Martin", "Bono", "Mick Jagger", "Freddie Mercury"], correct: 0 },
+            { question: "W jakim mieście odbywa się festiwal muzyczny Coachella?", answers: ["Los Angeles", "San Francisco", "New York", "Indio"], correct: 3 },
+            { question: "Jaka jest najnowsza wersja systemu operacyjnego Windows?", answers: ["Windows 7", "Windows 8", "Windows 10", "Windows 11"], correct: 3 },
+
+            // Język polski
+            { question: "Co to jest synonim?", answers: ["Wyraz o przeciwnym znaczeniu", "Wyraz o podobnym znaczeniu", "Wyraz o tym samym znaczeniu", "Wyraz bez znaczenia"], correct: 1 },
+            { question: "Jak nazywa się najkrótsza forma literacka?", answers: ["Opowiadanie", "Powieść", "Wiersz", "Aforyzm"], correct: 3 },
+            { question: "Kto napisał 'Pana Tadeusza'?", answers: ["Juliusz Słowacki", "Adam Mickiewicz", "Bolesław Prus", "Stefan Żeromski"], correct: 1 },
+            { question: "Czym jest metafora?", answers: ["Porównanie dwóch rzeczy", "Dosłowne znaczenie wyrazu", "Przenośne znaczenie wyrazu", "Użycie wyrazu w dosłownym znaczeniu"], correct: 2 },
+            { question: "Jaki jest temat wiersza 'Człowiek' Jana Twardowskiego?", answers: ["Śmierć", "Miłość", "Życie", "Przyroda"], correct: 2 },
+
+            // Matematyka
+            { question: "Ile wynosi pierwiastek kwadratowy z 16?", answers: ["2", "4", "8", "16"], correct: 1 },
+            { question: "Rozwiąż równanie: 2x + 3 = 7", answers: ["x = 2", "x = 3", "x = 4", "x = 5"], correct: 0 },
+            { question: "Jaka jest suma kątów w trójkącie?", answers: ["180 stopni", "360 stopni", "90 stopni", "270 stopni"], correct: 0 },
+            { question: "Ile to 25% z 200?", answers: ["25", "50", "75", "100"], correct: 1 },
+            { question: "Co to jest liczba pierwsza?", answers: ["Liczba podzielna przez 1 i samą siebie", "Liczba podzielna przez 2", "Liczba podzielna przez 3", "Liczba niepodzielna przez żadną liczbę"], correct: 0 },
+
+            // Przyroda
+            { question: "Jakie zwierzę jest największe na świecie?", answers: ["Słoń", "Wieloryb", "Żyrafa", "Niedźwiedź"], correct: 1 },
+            { question: "Jak nazywa się najdłuższa rzeka w Polsce?", answers: ["Wisła", "Odra", "Warta", "Bug"], correct: 0 },
+            { question: "Co jest głównym źródłem energii dla roślin?", answers: ["Woda", "Słońce", "Powietrze", "Gleba"], correct: 1 },
+            { question: "Jakie zwierzę jest znane z tego, że śpi w ciągu dnia?", answers: ["Sowa", "Leniwiec", "Niedźwiedź", "Zebra"], correct: 1 },
+            { question: "Jaki organ w ludzkim ciele odpowiada za pompowanie krwi?", answers: ["Wątroba", "Płuca", "Serce", "Żołądek"], correct: 2 },
+
+            // Inne
+            { question: "Która planeta jest najbliżej Słońca?", answers: ["Merkury", "Wenus", "Ziemia", "Mars"], correct: 0 },
+            { question: "Jak nazywa się proces, w którym rośliny wytwarzają tlen?", answers: ["Fotosynteza", "Oddychanie", "Fermentacja", "Rozkład"], correct: 0 },
+            { question: "Jaka jest największa pustynia na świecie?", answers: ["Sahara", "Gobi", "Karbota", "Antarktyczna"], correct: 3 },
+            { question: "Jakie jest najcięższe zwierzę lądowe?", answers: ["Słoń afrykański", "Niedźwiedź brunatny", "Nosorożec", "Żyrafa"], correct: 0 },
+            { question: "Który kraj jest największy pod względem powierzchni?", answers: ["Chiny", "Rosja", "Kanada", "USA"], correct: 1 },
+        ];
+
+        const maxTime = 30;
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let timer;
+        let timeLeft = maxTime;
+
+        function startQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            timeLeft = maxTime;
+            document.getElementById('result-container').innerHTML = '';
+            document.getElementById('stake-container').innerHTML = 'Stawka: 0 zł';
+            document.getElementById('timer').innerHTML = `Czas: ${timeLeft}`;
+            document.getElementById('quit-button').style.display = 'inline-block';
+            document.getElementById('question-container').style.display = 'block';
+            document.getElementById('result-container').style.display = 'none';
+            document.getElementById('timer').style.display = 'inline';
+            shuffleQuestions(); // Losowanie pytań
+            showQuestion();
+            startTimer();
+        }
+
+        function shuffleQuestions() {
+            for (let i = questions.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [questions[i], questions[j]] = [questions[j], questions[i]];
+            }
+        }
+
+        function showQuestion() {
+            if (currentQuestionIndex < questions.length) {
+                const question = questions[currentQuestionIndex];
+                document.querySelector('.question').innerText = question.question;
+                const answersContainer = document.querySelector('.answers');
+                answersContainer.innerHTML = '';
+                question.answers.forEach((answer, index) => {
+                    const button = document.createElement('button');
+                    button.innerText = answer;
+                    button.onclick = () => selectAnswer(index);
+                    answersContainer.appendChild(button);
+                });
+            } else {
+                endQuiz();
+            }
+        }
+
+        function selectAnswer(index) {
+            const question = questions[currentQuestionIndex];
+            if (index === question.correct) {
+                score += 1000; // Dodaj stawkę
+                document.getElementById('stake-container').innerHTML = `Stawka: ${score} zł`;
+                currentQuestionIndex++;
+                showQuestion();
+            } else {
+                endQuiz();
+            }
+        }
+
+        function startTimer() {
+            timer = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timer').innerHTML = `Czas: ${timeLeft}`;
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    endQuiz();
+                }
+            }, 1000);
+        }
+
+        function endQuiz() {
+            document.getElementById('question-container').style.display = 'none';
+            document.getElementById('result-container').innerText = `Koniec gry! Twój wynik to ${score} zł`;
+            document.getElementById('result-container').style.display = 'block';
+            document.getElementById('timer').style.display = 'none';
+            document.getElementById('quit-button').style.display = 'none';
+            clearInterval(timer);
+        }
+
+        document.getElementById('quit-button').addEventListener('click', endQuiz);
+
+        // Start quiz on page load
+        window.onload = startQuiz;
+
+        const backgroundMusic = document.getElementById('background-music');
+        backgroundMusic.volume = 0.5;
+        backgroundMusic.loop = true;
+        backgroundMusic.play();
+    </script>
 </body>
 </html>
+
